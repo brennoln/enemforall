@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  body {
+    @apply bg-slate-100 text-slate-800 antialiased selection:bg-slate-900 selection:text-white min-h-screen font-sans;
+    overscroll-behavior-y: none;
+  }
+
+  /* Garante conforto para toque no celular (pelo menos 44px de altura) */
+  button, input, select {
+    touch-action: manipulation;
+  }
+}
