@@ -7,6 +7,7 @@ export const mathQuestionsPart3: Question[] = [
     subject: 'matematica',
     topic: 'Porcentagem / Acréscimo Real',
     source: 'Questão Adaptada ENEM 2023 (Foco em Agilidade)',
+    difficulty: 1,
     context: 'A mensalidade de uma academia passou de R$ 80,00 para R$ 100,00.',
     question: 'Qual foi o percentual de aumento aplicado nessa mensalidade?',
     options: [
@@ -30,6 +31,7 @@ export const mathQuestionsPart3: Question[] = [
     subject: 'matematica',
     topic: 'Geometria Plana / Área do Círculo',
     source: 'Questão Adaptada ENEM 2022 (Foco em Agilidade)',
+    difficulty: 1,
     context: 'Uma praça circular tem diâmetro de 20 metros. Adote a aproximação π = 3,14.',
     question: 'Qual é a área total ocupada por essa praça?',
     options: [
@@ -53,6 +55,7 @@ export const mathQuestionsPart3: Question[] = [
     subject: 'matematica',
     topic: 'Conversão de Unidades de Tempo',
     source: 'ENEM 2021',
+    difficulty: 1,
     context: 'Uma prova com 90 questões de múltipla escolha deve ser realizada em exatamente 4 horas e 30 minutos.',
     question: 'Em média, quantos minutos o candidato tem disponível para resolver cada questão?',
     options: [
@@ -76,6 +79,7 @@ export const mathQuestionsPart3: Question[] = [
     subject: 'matematica',
     topic: 'Probabilidade / Eventos Complementares',
     source: 'ENEM 2023',
+    difficulty: 1,
     context: 'Em uma linha de montagem industrial, a probabilidade de um componente sair com algum defeito de fabricação é de 0,02 (2%).',
     question: 'Qual é a probabilidade percentual de um componente selecionado aleatoriamente ser PERFEITO (sem defeito)?',
     options: [
@@ -99,6 +103,7 @@ export const mathQuestionsPart3: Question[] = [
     subject: 'matematica',
     topic: 'Escalas / Redução de Área',
     source: 'Questão Adaptada ENEM 2022 (Foco em Agilidade)',
+    difficulty: 1,
     context: 'Uma miniatura de carro foi confeccionada na escala linear de 1 : 20.',
     question: 'A área do teto solar da miniatura corresponde a qual fração da área do teto solar do veículo real?',
     options: [
@@ -122,6 +127,7 @@ export const mathQuestionsPart3: Question[] = [
     subject: 'matematica',
     topic: 'Geometria Plana / Triângulo Equilátero',
     source: 'ENEM 2021',
+    difficulty: 1,
     context: 'Um mosaico decorativo utiliza ladrilhos triangulares equiláteros com lados medindo 6 cm. Considere a aproximação √3 = 1,7.',
     question: 'Qual é a área aproximada de um desses ladrilhos em cm²?',
     options: [
@@ -145,6 +151,7 @@ export const mathQuestionsPart3: Question[] = [
     subject: 'matematica',
     topic: 'Estatística / Amplitude Térmica',
     source: 'ENEM 2023',
+    difficulty: 1,
     context: 'Em um dia de inverno no Sul do país, a temperatura mínima registrada foi de -3°C e a máxima atingiu 17°C.',
     question: 'Qual foi a AMPLITUDE TÉRMICA registrada nesse dia?',
     options: [
@@ -168,6 +175,7 @@ export const mathQuestionsPart3: Question[] = [
     subject: 'matematica',
     topic: 'Análise Combinatória / Permutação Simples',
     source: 'Questão Adaptada ENEM 2022 (Foco em Agilidade)',
+    difficulty: 1,
     context: 'Cinco livros diferentes de matemática devem ser organizados lado a lado em uma prateleira da estante.',
     question: 'De quantas maneiras distintas esses 5 livros podem ser organizados?',
     options: [
@@ -191,6 +199,7 @@ export const mathQuestionsPart3: Question[] = [
     subject: 'matematica',
     topic: 'Razão e Proporção / Velocidade Média',
     source: 'ENEM 2021',
+    difficulty: 1,
     context: 'Um trem de carga percorre uma distância de 360 km em exatamente 4 horas e 30 minutos (4,5 horas).',
     question: 'Qual foi a velocidade média desenvolvida pelo trem nesse percurso?',
     options: [
@@ -214,6 +223,7 @@ export const mathQuestionsPart3: Question[] = [
     subject: 'matematica',
     topic: 'Juros Compostos / Noção Básica',
     source: 'Questão Adaptada ENEM 2023 (Foco em Agilidade)',
+    difficulty: 1,
     context: 'Uma aplicação financeira de R$ 1.000,00 rende 10% de juros compostos ao ano.',
     question: 'Qual será o saldo dessa aplicação ao final de 2 anos?',
     options: [
@@ -237,6 +247,7 @@ export const mathQuestionsPart3: Question[] = [
     subject: 'matematica',
     topic: 'Geometria Espacial / Paralelepípedo & Cubo',
     source: 'ENEM 2022',
+    difficulty: 1,
     context: 'Uma caixa cúbica de papelão tem aresta medindo 20 cm.',
     question: 'Quantos cubinhos de madeira de 5 cm de aresta cabem perfeitamente dentro dessa caixa?',
     options: [
@@ -260,6 +271,7 @@ export const mathQuestionsPart3: Question[] = [
     subject: 'matematica',
     topic: 'Porcentagem / Concentração Salina',
     source: 'Questão Adaptada ENEM 2021 (Foco em Agilidade)',
+    difficulty: 1,
     context: 'Um frasco de soro caseiro contém 500 mL de água com 15 gramas de sal dissolvidos.',
     question: 'Qual é a porcentagem massa/volume (g/100 mL) de sal nessa solução?',
     options: [
@@ -283,6 +295,7 @@ export const mathQuestionsPart3: Question[] = [
     subject: 'matematica',
     topic: 'Função do 1º Grau / Raiz da Função',
     source: 'ENEM 2023',
+    difficulty: 1,
     context: 'A temperatura T (em °C) no interior de uma câmara frigorífica varia com o tempo t (em minutos) segundo a função T(t) = -4t + 28.',
     question: 'Após quantos minutos da ligação a câmara atinge exatamente 0°C?',
     options: [
@@ -306,6 +319,7 @@ export const mathQuestionsPart3: Question[] = [
     subject: 'matematica',
     topic: 'Geometria Plana / Losango',
     source: 'ENEM 2022',
+    difficulty: 1,
     context: 'Uma pipa tem o formato de um losango com diagonais medindo 40 cm e 30 cm.',
     question: 'Qual é a área dessa pipa em cm²?',
     options: [
@@ -329,6 +343,7 @@ export const mathQuestionsPart3: Question[] = [
     subject: 'matematica',
     topic: 'Análise de Informações / Lógica Simples',
     source: 'ENEM 2023',
+    difficulty: 1,
     context: 'Uma fábrica produz 1.200 peças por hora com 4 operadores. Se o número de operadores dobrar e o rendimento por operador se mantiver constante:',
     question: 'Quantas peças serão produzidas em uma jornada diária de 8 horas com essa nova equipe?',
     options: [

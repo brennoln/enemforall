@@ -1,12 +1,15 @@
 export type Subject = 'fisica' | 'quimica' | 'biologia' | 'matematica';
 
+export type DifficultyLevel = 1 | 2 | 3; // 1: Fácil (🌶️), 2: Média (🌶️🌶️), 3: Difícil (🌶️🌶️🌶️)
+
 export interface Question {
   id: string;
   subject: Subject;
   topic: string;
   source: string;
-  isSpecial?: boolean; // Tag especial amarela para os tópicos mais recorrentes do ENEM
-  specialReason?: string; // Motivo da recorrência (ex: "Top 1 em Matemática do ENEM")
+  difficulty: DifficultyLevel; // Nível de dificuldade em pimentinhas
+  isSpecial?: boolean;
+  specialReason?: string;
   context?: string;
   question: string;
   options: {
@@ -19,7 +22,7 @@ export interface Question {
     stepByStep: string[];
     timeSaverTip: string;
     trapAlert?: string;
-    deepMemoryFact?: string; // Informação aprofundada para memória fotográfica
+    deepMemoryFact?: string;
   };
 }
 
@@ -33,7 +36,7 @@ export interface BizuTopic {
   fastTechnique: string;
   formulas?: string[];
   classicQuestionType: string;
-  memoryBooster?: string; // Informações densas extras para estudantes de alta memorização
+  memoryBooster?: string;
 }
 
 export interface FormulaCheatSheetItem {
@@ -45,5 +48,5 @@ export interface FormulaCheatSheetItem {
   variables?: string;
   macete: string;
   whenToUse: string;
-  advancedTip?: string; // Detalhe técnico adicional
+  advancedTip?: string;
 }

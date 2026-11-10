@@ -34,6 +34,7 @@ function shuffleArray<T>(array: T[]): T[] {
 export const QuizView: React.FC = () => {
   const [selectedSubject, setSelectedSubject] = useState<Subject | 'all'>('matematica');
   const [onlySpecials, setOnlySpecials] = useState<boolean>(false);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<number | 'all'>('all');
   const [questionsList, setQuestionsList] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<'A' | 'B' | 'C' | 'D' | 'E' | null>(null);
@@ -50,7 +51,7 @@ export const QuizView: React.FC = () => {
     setStreakData(loadUserDailyProgress());
   }, []);
 
-  // Embaralha aleatoriamente as questões sempre que a matéria ou o filtro de especiais mudar
+  // Embaralha aleatoriamente as questões sempre que a matéria ou o filtro de especiais ou dificuldade mudar
   useEffect(() => {
     let filtered = questionsData.filter(
       (q) => selectedSubject === 'all' || q.subject === selectedSubject
@@ -60,13 +61,17 @@ export const QuizView: React.FC = () => {
       filtered = filtered.filter((q) => q.isSpecial);
     }
 
+    if (selectedDifficulty !== 'all') {
+      filtered = filtered.filter((q) => q.difficulty === selectedDifficulty);
+    }
+
     setQuestionsList(shuffleArray(filtered));
     setCurrentIndex(0);
     setSelectedOption(null);
     setIsConfirmed(false);
     setScore({ correct: 0, wrong: 0 });
     setQuizFinished(false);
-  }, [selectedSubject, onlySpecials]);
+  }, [selectedSubject, onlySpecials, selectedDifficulty]);
 
   const currentQuestion: Question | undefined = questionsList[currentIndex];
 
@@ -206,6 +211,7 @@ export const QuizView: React.FC = () => {
         <button
           onClick={() => {
             setOnlySpecials(false);
+            setSelectedDifficulty('all');
             setSelectedSubject('matematica');
           }}
           className="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-semibold"
@@ -312,11 +318,11 @@ export const QuizView: React.FC = () => {
         {/* Botões das matérias com touch target confortável */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
           {[
-            { id: 'matematica', label: 'Matemática', count: onlySpecials ? 10 : 45, icon: Calculator },
-            { id: 'fisica', label: 'Física', count: onlySpecials ? 5 : 10, icon: Atom },
-            { id: 'quimica', label: 'Química', count: onlySpecials ? 5 : 10, icon: TestTube2 },
-            { id: 'biologia', label: 'Biologia', count: onlySpecials ? 5 : 10, icon: Dna },
-            { id: 'all', label: 'Misto', count: onlySpecials ? 25 : 75, icon: Shuffle },
+            { id: 'matematica', label: 'Matemática', count: onlySpecials ? 10 : 65, icon: Calculator },
+            { id: 'fisica', label: 'Física', count: onlySpecials ? 5 : 30, icon: Atom },
+            { id: 'quimica', label: 'Química', count: onlySpecials ? 5 : 30, icon: TestTube2 },
+            { id: 'biologia', label: 'Biologia', count: onlySpecials ? 5 : 30, icon: Dna },
+            { id: 'all', label: 'Misto', count: onlySpecials ? 25 : 155, icon: Shuffle },
           ].map((tab) => {
             const TabIcon = tab.icon;
             const isSelected = selectedSubject === tab.id;
@@ -341,6 +347,36 @@ export const QuizView: React.FC = () => {
               </button>
             );
           })}
+        </div>
+
+        {/* Filtro por Índice de Dificuldade (Pimentinhas) */}
+        <div className="flex items-center justify-between pt-2 border-t border-slate-100 flex-wrap gap-2">
+          <span className="text-[11px] font-semibold text-slate-600 flex items-center gap-1">
+            Dificuldade:
+          </span>
+          <div className="flex items-center gap-1">
+            {[
+              { id: 'all', label: 'Todas' },
+              { id: 1, label: '🌶️ Fácil' },
+              { id: 2, label: '🌶️🌶️ Média' },
+              { id: 3, label: '🌶️🌶️🌶️ Difícil' },
+            ].map((lvl) => {
+              const isLvlSelected = selectedDifficulty === lvl.id;
+              return (
+                <button
+                  key={lvl.id}
+                  onClick={() => setSelectedDifficulty(lvl.id as any)}
+                  className={`px-2 py-0.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all ${
+                    isLvlSelected
+                      ? 'bg-rose-600 text-white shadow-2xs font-bold'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  {lvl.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Placar Acadêmico Rápido */}
@@ -375,12 +411,27 @@ export const QuizView: React.FC = () => {
           </div>
         )}
 
-        {/* Metadados: Disciplina e Fonte */}
-        <div className="flex items-center justify-between gap-1.5 mb-3 pb-2.5 border-b border-slate-100">
-          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium border ${badge.color}`}>
-            <Icon className="w-3 h-3" />
-            {badge.label} • {currentQuestion.topic}
-          </span>
+        {/* Metadados: Disciplina, Dificuldade em Pimentinhas e Fonte */}
+        <div className="flex items-center justify-between gap-1.5 mb-3 pb-2.5 border-b border-slate-100 flex-wrap">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium border ${badge.color}`}>
+              <Icon className="w-3 h-3" />
+              {badge.label} • {currentQuestion.topic}
+            </span>
+
+            {/* Selo Visual de Dificuldade com Pimentinhas */}
+            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold border ${
+              currentQuestion.difficulty === 1
+                ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                : currentQuestion.difficulty === 2
+                ? 'bg-amber-50 text-amber-800 border-amber-200'
+                : 'bg-rose-50 text-rose-800 border-rose-200'
+            }`}>
+              {currentQuestion.difficulty === 1 && '🌶️ Fácil'}
+              {currentQuestion.difficulty === 2 && '🌶️🌶️ Média'}
+              {currentQuestion.difficulty === 3 && '🌶️🌶️🌶️ Difícil'}
+            </span>
+          </div>
 
           <span className="px-2 py-0.5 rounded-md text-[10px] sm:text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 font-mono">
             {currentQuestion.source}

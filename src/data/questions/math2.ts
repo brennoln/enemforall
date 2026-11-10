@@ -7,6 +7,7 @@ export const mathQuestionsPart2: Question[] = [
     subject: 'matematica',
     topic: 'Análise Combinatória / Combinação',
     source: 'ENEM 2023',
+    difficulty: 1,
     context: 'Uma comissão de saúde em um hospital deve ser formada por exatamente 3 médicos escolhidos entre 7 médicos disponíveis.',
     question: 'De quantas maneiras distintas essa comissão pode ser formada?',
     options: [
@@ -30,6 +31,7 @@ export const mathQuestionsPart2: Question[] = [
     subject: 'matematica',
     topic: 'Estatística / Média Simples',
     source: 'Questão Adaptada ENEM 2022 (Foco em Agilidade)',
+    difficulty: 1,
     context: 'As temperaturas médias registradas de segunda a sexta-feira em uma cidade foram: 24°C, 28°C, 25°C, 31°C e 27°C.',
     question: 'Qual foi a temperatura média nesses 5 dias úteis?',
     options: [
@@ -53,6 +55,7 @@ export const mathQuestionsPart2: Question[] = [
     subject: 'matematica',
     topic: 'Matemática Financeira / Juros Simples',
     source: 'ENEM 2021',
+    difficulty: 1,
     context: 'Um empréstimo de R$ 2.000,00 foi contratado a uma taxa de juros simples de 3% ao mês durante 5 meses.',
     question: 'Qual é o montante total (capital + juros) a ser quitado no final desse período?',
     options: [
@@ -76,6 +79,7 @@ export const mathQuestionsPart2: Question[] = [
     subject: 'matematica',
     topic: 'Geometria Espacial / Paralelepípedo',
     source: 'Questão Adaptada ENEM 2023 (Foco em Agilidade)',
+    difficulty: 1,
     context: 'Uma piscina em formato de bloco retangular (paralelepípedo) possui 8 metros de comprimento, 5 metros de largura e 1,5 metro de profundidade.',
     question: 'Quantos LITROS de água são necessários para enchê-la totalmente?',
     options: [
@@ -99,6 +103,7 @@ export const mathQuestionsPart2: Question[] = [
     subject: 'matematica',
     topic: 'Probabilidade / Eventos Sucessivos',
     source: 'ENEM 2023',
+    difficulty: 1,
     context: 'Dois dados perfeitos de 6 faces numeradas de 1 a 6 são lançados simultaneamente.',
     question: 'Qual é a probabilidade de que os dois números obtidos sejam iguais?',
     options: [
@@ -122,6 +127,7 @@ export const mathQuestionsPart2: Question[] = [
     subject: 'matematica',
     topic: 'Proporcionalidade / Densidade Demográfica',
     source: 'Questão Adaptada ENEM 2022 (Foco em Agilidade)',
+    difficulty: 1,
     context: 'Um município possui uma população estimada de 450.000 habitantes distribuídos em uma área territorial de 1.500 km².',
     question: 'Qual é a densidade demográfica desse município em habitantes por km²?',
     options: [
@@ -145,6 +151,7 @@ export const mathQuestionsPart2: Question[] = [
     subject: 'matematica',
     topic: 'Geometria Plana / Área do Trapézio',
     source: 'ENEM 2021',
+    difficulty: 1,
     context: 'Um terreno tem a forma de um trapézio com base maior medindo 30 metros, base menor de 18 metros e altura perpendicular de 10 metros.',
     question: 'Qual é a área total desse terreno em metros quadrados?',
     options: [
@@ -168,6 +175,7 @@ export const mathQuestionsPart2: Question[] = [
     subject: 'matematica',
     topic: 'Progressão Aritmética (PA) Express',
     source: 'Questão Adaptada ENEM 2023 (Foco em Agilidade)',
+    difficulty: 1,
     context: 'Uma pessoa decide guardar dinheiro em um cofrinho: no 1º mês guarda R$ 50,00, e a cada mês seguinte guarda R$ 20,00 a mais que no mês anterior (R$ 70 no 2º, R$ 90 no 3º...).',
     question: 'Quanto ela guardará exatamente no 10º mês?',
     options: [
@@ -191,6 +199,7 @@ export const mathQuestionsPart2: Question[] = [
     subject: 'matematica',
     topic: 'Geometria Plana / Circunferência',
     source: 'ENEM 2022',
+    difficulty: 1,
     context: 'A roda de uma bicicleta possui raio de 35 cm. Considere a aproximação π = 22/7.',
     question: 'Que distância a bicicleta percorre após a roda dar 100 voltas completas no chão?',
     options: [
@@ -214,6 +223,7 @@ export const mathQuestionsPart2: Question[] = [
     subject: 'matematica',
     topic: 'Potenciação e Notação Científica',
     source: 'ENEM 2023',
+    difficulty: 1,
     context: 'A massa de um único átomo de hidrogênio é de aproximadamente 1,66 × 10⁻²⁴ gramas.',
     question: 'Quantos gramas pesam, em notação científica, 3 × 10²³ átomos de hidrogênio?',
     options: [
@@ -237,6 +247,7 @@ export const mathQuestionsPart2: Question[] = [
     subject: 'matematica',
     topic: 'Leitura e Interpretação Gráfica',
     source: 'Questão Adaptada ENEM 2022 (Foco em Agilidade)',
+    difficulty: 1,
     context: 'Uma pesquisa de satisfação entrevistou 400 clientes: 45% responderam "Ótimo", 35% "Bom", 15% "Regular" e o restante "Ruim".',
     question: 'Quantos clientes avaliaram o serviço como "Ruim"?',
     options: [
@@ -260,6 +271,7 @@ export const mathQuestionsPart2: Question[] = [
     subject: 'matematica',
     topic: 'Sistemas de Equações do 1º Grau',
     source: 'Questão Adaptada ENEM 2021 (Foco em Agilidade)',
+    difficulty: 1,
     context: 'Em um estacionamento há carros e motos, totalizando 30 veículos e 80 rodas no chão (cada carro tem 4 rodas e cada moto tem 2 rodas).',
     question: 'Quantas MOTOS estão estacionadas nesse local?',
     options: [
@@ -283,6 +295,7 @@ export const mathQuestionsPart2: Question[] = [
     subject: 'matematica',
     topic: 'Geometria Espacial / Esfera',
     source: 'Questão Adaptada ENEM 2023 (Foco em Agilidade)',
+    difficulty: 1,
     context: 'Um brinquedo esférico de borracha maciça possui raio de 3 cm. Considere a aproximação π = 3.',
     question: 'Qual é o volume dessa esfera em cm³?',
     options: [
@@ -306,6 +319,7 @@ export const mathQuestionsPart2: Question[] = [
     subject: 'matematica',
     topic: 'Razão e Frações / Rendimento',
     source: 'ENEM 2023',
+    difficulty: 1,
     context: 'Um carro flex percorre 12 km por litro de gasolina e 8,4 km por litro de etanol.',
     question: 'A autonomia com etanol representa qual fração ou porcentagem da autonomia com gasolina?',
     options: [
@@ -329,6 +343,7 @@ export const mathQuestionsPart2: Question[] = [
     subject: 'matematica',
     topic: 'Estatística / Moda Express',
     source: 'ENEM 2022',
+    difficulty: 1,
     context: 'Em uma turma de cursinho pré-vestibular, as idades dos alunos de uma sala são: 17, 18, 17, 19, 18, 17, 20, 18, 17, 21.',
     question: 'Qual é a MODA dessa distribuição de idades?',
     options: [
