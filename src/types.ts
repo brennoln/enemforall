@@ -11,10 +11,13 @@ export interface Question {
   isSpecial?: boolean;
   specialReason?: string;
   context?: string;
+  imageUrl?: string;
+  secondaryImageUrl?: string;
   question: string;
   options: {
     letter: 'A' | 'B' | 'C' | 'D' | 'E';
     text: string;
+    imageUrl?: string;
   }[];
   correctAnswer: 'A' | 'B' | 'C' | 'D' | 'E';
   explanation: {

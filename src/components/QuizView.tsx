@@ -8,7 +8,6 @@ import {
   XCircle,
   AlertCircle,
   ChevronRight,
-  RotateCcw,
   Award,
   Zap,
   Clock,
@@ -19,7 +18,11 @@ import {
   Shuffle,
   Star,
   Brain,
-  Flame
+  Flame,
+  FileText,
+  ListOrdered,
+  ZoomIn,
+  X
 } from 'lucide-react';
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -32,8 +35,9 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 export const QuizView: React.FC = () => {
-  const [selectedSubject, setSelectedSubject] = useState<Subject | 'all'>('matematica');
-  const [onlySpecials, setOnlySpecials] = useState<boolean>(false);
+  const [selectedSubject, setSelectedSubject] = useState<Subject | 'all'>('all');
+  const [filterMode, setFilterMode] = useState<'all' | 'enem2025' | 'specials'>('enem2025');
+  const [sequentialOrder, setSequentialOrder] = useState<boolean>(true);
   const [selectedDifficulty, setSelectedDifficulty] = useState<number | 'all'>('all');
   const [questionsList, setQuestionsList] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -41,6 +45,7 @@ export const QuizView: React.FC = () => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [score, setScore] = useState({ correct: 0, wrong: 0 });
   const [quizFinished, setQuizFinished] = useState(false);
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
   // Progresso do Foguinho (Streak Diário)
   const [streakData, setStreakData] = useState<UserDailyProgress>(loadUserDailyProgress());
@@ -51,27 +56,38 @@ export const QuizView: React.FC = () => {
     setStreakData(loadUserDailyProgress());
   }, []);
 
-  // Embaralha aleatoriamente as questões sempre que a matéria ou o filtro de especiais ou dificuldade mudar
-  useEffect(() => {
+  const getFilteredBase = (subjectFilter: Subject | 'all') => {
     let filtered = questionsData.filter(
-      (q) => selectedSubject === 'all' || q.subject === selectedSubject
+      (q) => subjectFilter === 'all' || q.subject === subjectFilter
     );
 
-    if (onlySpecials) {
-      filtered = filtered.filter((q) => q.isSpecial);
+    if (filterMode === 'enem2025') {
+      filtered = filtered.filter((q) => q.id.startsWith('enem2025-'));
+    } else if (filterMode === 'specials') {
+      filtered = filtered.filter((q) => q.isSpecial && !q.id.startsWith('enem2025-'));
     }
 
     if (selectedDifficulty !== 'all') {
       filtered = filtered.filter((q) => q.difficulty === selectedDifficulty);
     }
 
-    setQuestionsList(shuffleArray(filtered));
+    return filtered;
+  };
+
+  // Atualiza a lista de questões sempre que filtros mudarem
+  useEffect(() => {
+    const filtered = getFilteredBase(selectedSubject);
+    if (filterMode === 'enem2025' && sequentialOrder) {
+      setQuestionsList(filtered);
+    } else {
+      setQuestionsList(shuffleArray(filtered));
+    }
     setCurrentIndex(0);
     setSelectedOption(null);
     setIsConfirmed(false);
     setScore({ correct: 0, wrong: 0 });
     setQuizFinished(false);
-  }, [selectedSubject, onlySpecials, selectedDifficulty]);
+  }, [selectedSubject, filterMode, sequentialOrder, selectedDifficulty]);
 
   const currentQuestion: Question | undefined = questionsList[currentIndex];
 
@@ -129,12 +145,8 @@ export const QuizView: React.FC = () => {
   };
 
   const handleReshuffleCurrent = () => {
-    let filtered = questionsData.filter(
-      (q) => selectedSubject === 'all' || q.subject === selectedSubject
-    );
-    if (onlySpecials) {
-      filtered = filtered.filter((q) => q.isSpecial);
-    }
+    const filtered = getFilteredBase(selectedSubject);
+    setSequentialOrder(false);
     setQuestionsList(shuffleArray(filtered));
     setCurrentIndex(0);
     setSelectedOption(null);
@@ -210,13 +222,13 @@ export const QuizView: React.FC = () => {
         <p className="text-slate-600 text-sm mb-3">Nenhuma questão encontrada para este filtro selecionado.</p>
         <button
           onClick={() => {
-            setOnlySpecials(false);
+            setFilterMode('all');
             setSelectedDifficulty('all');
-            setSelectedSubject('matematica');
+            setSelectedSubject('all');
           }}
           className="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-semibold"
         >
-          Limpar Filtros e Ver Todas
+          Limpar Filtros e Ver Todas (245)
         </button>
       </div>
     );
@@ -228,6 +240,36 @@ export const QuizView: React.FC = () => {
 
   return (
     <div className="max-w-3xl mx-auto space-y-3 pb-8">
+      {/* MODAL DE ZOOM PARA IMAGENS */}
+      {zoomedImage && (
+        <div
+          className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6"
+          onClick={() => setZoomedImage(null)}
+        >
+          <div
+            className="relative max-w-4xl w-full bg-white rounded-2xl p-3 sm:p-5 shadow-2xl max-h-[90vh] overflow-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+              <span className="text-xs font-bold text-slate-700">
+                Visualização Ampliada • {currentQuestion.source}
+              </span>
+              <button
+                onClick={() => setZoomedImage(null)}
+                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <img
+              src={zoomedImage}
+              alt="Imagem ampliada da questão"
+              className="w-full h-auto rounded-lg object-contain mx-auto"
+            />
+          </div>
+        </div>
+      )}
+
       {/* CARD DO FOGUINHO (STREAK DIÁRIO COM META DE 10 QUESTÕES) */}
       <div className="bg-gradient-to-r from-orange-50 via-amber-50 to-rose-50 border border-orange-200 p-3 sm:p-4 rounded-2xl shadow-2xs flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
@@ -257,7 +299,7 @@ export const QuizView: React.FC = () => {
           </div>
         </div>
 
-        {/* Barra de Progresso Circular ou Linear Compacta */}
+        {/* Barra de Progresso Linear Compacta */}
         <div className="text-right shrink-0">
           <span className="font-mono text-xs font-bold text-orange-800">
             {streakData.todayCount}/10
@@ -283,46 +325,84 @@ export const QuizView: React.FC = () => {
         </div>
       )}
 
-      {/* SELETOR DE MATÉRIA & FILTRO ESPECIAL */}
+      {/* SELETOR DE MODO DE BANCO (PROVA ENEM 2025 COMPLETA vs BANCO GERAL 245 vs CAMPEÃS) */}
       <div className="bg-white border border-slate-200 p-3 sm:p-4 rounded-2xl shadow-2xs space-y-2.5">
-        <div className="flex items-center justify-between text-xs text-slate-600 px-0.5 font-medium">
-          <span className="text-[11px] sm:text-xs">Disciplina:</span>
-
-          <div className="flex items-center gap-2">
-            {/* Toggle de Apenas Especiais (Top Campeãs) */}
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-100">
+          <div className="flex flex-wrap items-center gap-1.5">
             <button
-              onClick={() => setOnlySpecials(!onlySpecials)}
-              className={`px-2 py-0.5 rounded-lg text-[10px] sm:text-[11px] font-semibold flex items-center gap-1 transition-all ${
-                onlySpecials
-                  ? 'bg-amber-100 text-amber-900 border border-amber-300 shadow-2xs'
-                  : 'bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200'
+              onClick={() => setFilterMode('enem2025')}
+              className={`px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold flex items-center gap-1.5 transition-all ${
+                filterMode === 'enem2025'
+                  ? 'bg-indigo-600 text-white shadow-xs'
+                  : 'bg-indigo-50 text-indigo-800 hover:bg-indigo-100 border border-indigo-200'
               }`}
             >
-              <Star className={`w-3 h-3 ${onlySpecials ? 'fill-amber-500 text-amber-500' : ''}`} />
-              <span>Apenas Campeãs (Top 25)</span>
+              <FileText className="w-3.5 h-3.5" />
+              <span>Prova ENEM 2025 Completa (90)</span>
             </button>
 
-            <span className="font-mono text-slate-600 text-[11px]">
+            <button
+              onClick={() => setFilterMode('all')}
+              className={`px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-semibold flex items-center gap-1 transition-all ${
+                filterMode === 'all'
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
+              }`}
+            >
+              <span>Banco Completo (245)</span>
+            </button>
+
+            <button
+              onClick={() => setFilterMode('specials')}
+              className={`px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-semibold flex items-center gap-1 transition-all ${
+                filterMode === 'specials'
+                  ? 'bg-amber-500 text-white shadow-xs'
+                  : 'bg-amber-50 text-amber-900 hover:bg-amber-100 border border-amber-200'
+              }`}
+            >
+              <Star className={`w-3.5 h-3.5 ${filterMode === 'specials' ? 'fill-white text-white' : 'fill-amber-500 text-amber-500'}`} />
+              <span>Top 25 Históricas</span>
+            </button>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            {filterMode === 'enem2025' && (
+              <button
+                onClick={() => setSequentialOrder(!sequentialOrder)}
+                title="Alternar entre Ordem Oficial do Caderno Amarelo (Q91-Q180) e Ordem Embaralhada"
+                className={`px-2 py-1 rounded-lg text-[10px] sm:text-[11px] font-semibold flex items-center gap-1 border transition-all ${
+                  sequentialOrder
+                    ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                    : 'bg-slate-100 text-slate-600 border-slate-200'
+                }`}
+              >
+                <ListOrdered className="w-3.5 h-3.5" />
+                <span>{sequentialOrder ? 'Ordem Q91→Q180' : 'Aleatório'}</span>
+              </button>
+            )}
+
+            <span className="font-mono text-slate-700 font-bold text-[11px] bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
               {currentIndex + 1}/{questionsList.length}
             </span>
+
             <button
               onClick={handleReshuffleCurrent}
-              title="Embaralhar ordem"
-              className="p-1 rounded-md text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors"
+              title="Embaralhar questões"
+              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors border border-slate-200"
             >
               <Shuffle className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
 
-        {/* Botões das matérias com touch target confortável */}
+        {/* Botões das matérias */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
           {[
-            { id: 'matematica', label: 'Matemática', count: onlySpecials ? 10 : 65, icon: Calculator },
-            { id: 'fisica', label: 'Física', count: onlySpecials ? 5 : 30, icon: Atom },
-            { id: 'quimica', label: 'Química', count: onlySpecials ? 5 : 30, icon: TestTube2 },
-            { id: 'biologia', label: 'Biologia', count: onlySpecials ? 5 : 30, icon: Dna },
-            { id: 'all', label: 'Misto', count: onlySpecials ? 25 : 155, icon: Shuffle },
+            { id: 'all', label: 'Todas', count: getFilteredBase('all').length, icon: Shuffle },
+            { id: 'matematica', label: 'Matemática', count: getFilteredBase('matematica').length, icon: Calculator },
+            { id: 'fisica', label: 'Física', count: getFilteredBase('fisica').length, icon: Atom },
+            { id: 'quimica', label: 'Química', count: getFilteredBase('quimica').length, icon: TestTube2 },
+            { id: 'biologia', label: 'Biologia', count: getFilteredBase('biologia').length, icon: Dna },
           ].map((tab) => {
             const TabIcon = tab.icon;
             const isSelected = selectedSubject === tab.id;
@@ -349,12 +429,12 @@ export const QuizView: React.FC = () => {
           })}
         </div>
 
-        {/* Filtro por Índice de Dificuldade (Pimentinhas) */}
+        {/* Filtro por Índice de Dificuldade (Pimentinhas) e Seletor Rápido de Questão */}
         <div className="flex items-center justify-between pt-2 border-t border-slate-100 flex-wrap gap-2">
-          <span className="text-[11px] font-semibold text-slate-600 flex items-center gap-1">
-            Dificuldade:
-          </span>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 flex-wrap">
+            <span className="text-[11px] font-semibold text-slate-600 mr-1">
+              Dificuldade:
+            </span>
             {[
               { id: 'all', label: 'Todas' },
               { id: 1, label: '🌶️ Fácil' },
@@ -376,6 +456,26 @@ export const QuizView: React.FC = () => {
                 </button>
               );
             })}
+          </div>
+
+          {/* Navegador Rápido de Questão (Dropdown) */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium">Ir para:</span>
+            <select
+              value={currentIndex}
+              onChange={(e) => {
+                setCurrentIndex(Number(e.target.value));
+                setSelectedOption(null);
+                setIsConfirmed(false);
+              }}
+              className="text-[11px] bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-slate-800 font-medium focus:outline-none focus:border-indigo-500 max-w-[170px] truncate"
+            >
+              {questionsList.map((q, idx) => (
+                <option key={q.id} value={idx}>
+                  {idx + 1}. {q.source.replace(' (Caderno 5 Amarelo)', '')} ({q.subject.slice(0, 3).toUpperCase()})
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -403,7 +503,7 @@ export const QuizView: React.FC = () => {
       <div className={`bg-white border rounded-2xl p-4 sm:p-6 md:p-8 shadow-xs transition-all ${
         currentQuestion.isSpecial ? 'border-amber-300/80 ring-1 ring-amber-200/50' : 'border-slate-200'
       }`}>
-        {/* TAG ESPECIAL AMARELA EM DESTAQUE NO TOPO (QUANDO FOR QUESTÃO TOP CAMPEÃ) */}
+        {/* TAG ESPECIAL AMARELA EM DESTAQUE NO TOPO */}
         {currentQuestion.isSpecial && (
           <div className="mb-3 p-2 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-2 text-amber-950 text-xs font-semibold animate-in fade-in duration-150">
             <Star className="w-4 h-4 fill-amber-500 text-amber-600 shrink-0" />
@@ -440,9 +540,41 @@ export const QuizView: React.FC = () => {
 
         {/* Contexto Enxuto Acadêmico */}
         {currentQuestion.context && (
-          <p className="text-slate-700 text-[13px] sm:text-sm md:text-base leading-relaxed mb-3.5 font-serif-academic text-justify">
+          <p className="text-slate-700 text-[13px] sm:text-sm md:text-base leading-relaxed mb-3.5 font-serif-academic whitespace-pre-line">
             {currentQuestion.context}
           </p>
+        )}
+
+        {/* IMAGEM OFICIAL DA QUESTÃO (QUANDO EXISTIR) */}
+        {currentQuestion.imageUrl && (
+          <div className="my-4 bg-slate-50/70 border border-slate-200 rounded-xl p-2.5 sm:p-4 text-center">
+            <div className="relative group inline-block max-w-full">
+              <img
+                src={currentQuestion.imageUrl}
+                alt={`Figura da questão ${currentQuestion.source}`}
+                onClick={() => setZoomedImage(currentQuestion.imageUrl!)}
+                className="max-h-[420px] w-auto mx-auto rounded-lg border border-slate-200/80 bg-white shadow-2xs cursor-zoom-in transition-transform hover:scale-[1.01]"
+              />
+              <button
+                type="button"
+                onClick={() => setZoomedImage(currentQuestion.imageUrl!)}
+                className="mt-2 inline-flex items-center gap-1 text-[11px] text-indigo-600 hover:text-indigo-800 font-medium"
+              >
+                <ZoomIn className="w-3.5 h-3.5" /> Toque na imagem para ampliar
+              </button>
+            </div>
+
+            {currentQuestion.secondaryImageUrl && (
+              <div className="mt-3 pt-3 border-t border-slate-200/70">
+                <img
+                  src={currentQuestion.secondaryImageUrl}
+                  alt={`Segunda figura da questão ${currentQuestion.source}`}
+                  onClick={() => setZoomedImage(currentQuestion.secondaryImageUrl!)}
+                  className="max-h-[380px] w-auto mx-auto rounded-lg border border-slate-200/80 bg-white shadow-2xs cursor-zoom-in"
+                />
+              </div>
+            )}
+          </div>
         )}
 
         {/* Comando Direto */}
@@ -450,7 +582,7 @@ export const QuizView: React.FC = () => {
           {currentQuestion.question}
         </h3>
 
-        {/* Alternativas */}
+        {/* Alternativas (Com suporte a imagens nas alternativas!) */}
         <div className="space-y-2 mb-5">
           {currentQuestion.options.map((opt) => {
             const isSelected = selectedOption === opt.letter;
@@ -472,7 +604,7 @@ export const QuizView: React.FC = () => {
                 buttonStyle = 'bg-rose-50 border-rose-400 text-rose-950';
                 circleStyle = 'border-rose-500 bg-rose-500 text-white font-bold';
               } else {
-                buttonStyle = 'bg-slate-50/40 border-slate-200 opacity-40 text-slate-400';
+                buttonStyle = 'bg-slate-50/40 border-slate-200 opacity-45 text-slate-400';
               }
             }
 
@@ -486,9 +618,20 @@ export const QuizView: React.FC = () => {
                 <span className={`w-6 h-6 rounded-md flex items-center justify-center text-xs font-semibold shrink-0 border transition-colors ${circleStyle}`}>
                   {opt.letter}
                 </span>
-                <span className="text-[13px] sm:text-sm md:text-base leading-relaxed pt-0.5">
-                  {opt.text}
-                </span>
+                <div className="flex-1 space-y-2">
+                  <span className="text-[13px] sm:text-sm md:text-base leading-relaxed pt-0.5 block">
+                    {opt.text}
+                  </span>
+                  {opt.imageUrl && (
+                    <div className="pt-1">
+                      <img
+                        src={opt.imageUrl}
+                        alt={`Alternativa ${opt.letter}`}
+                        className="max-h-44 w-auto rounded-lg border border-slate-200 bg-white p-1"
+                      />
+                    </div>
+                  )}
+                </div>
               </button>
             );
           })}
@@ -547,7 +690,7 @@ export const QuizView: React.FC = () => {
             <span className="font-bold text-emerald-800 block mb-1 text-[11px] sm:text-xs uppercase tracking-wider flex items-center gap-1">
               <Zap className="w-3 h-3 text-emerald-600" /> Como Matar em Menos de 45s:
             </span>
-            <p className="leading-relaxed font-medium">{currentQuestion.explanation.quickHack}</p>
+            <p className="leading-relaxed font-medium whitespace-pre-line">{currentQuestion.explanation.quickHack}</p>
           </div>
 
           {/* Dica de Economia de Tempo */}
