@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Subject } from '../types';
 import { bizusData } from '../data/bizus';
+import { studyTrailsData } from '../data/studyTrails';
+import { TrailVisual } from './TrailVisual';
 import {
   Zap,
   Search,
@@ -20,16 +22,45 @@ import {
   AlertTriangle,
   Layers,
   Copy,
-  Check
+  Check,
+  Map,
+  BookOpen,
+  Lightbulb,
+  Play
 } from 'lucide-react';
 
+const TRAIL_STORAGE_KEY = 'enem_para_todos_trail_done_v1';
+
 export const BizusView: React.FC = () => {
+  const [mainMode, setMainMode] = useState<'trilha' | 'revisao'>('trilha');
+  const [trailSubject, setTrailSubject] = useState<Subject>('matematica');
+  const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>({});
+  const [expandedStepId, setExpandedStepId] = useState<string | null>('trail-mat-1');
+  const [miniQuizAnswers, setMiniQuizAnswers] = useState<Record<string, number>>({});
+
   const [activeSubTab, setActiveSubTab] = useState<'revisao' | 'mapeamento' | 'chute' | 'bizus'>('revisao');
   const [megaAreaFilter, setMegaAreaFilter] = useState<'all' | 'biologia' | 'quimica' | 'fisica' | 'geometria'>('all');
   const [copiedArea, setCopiedArea] = useState<string | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<Subject | 'all'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(TRAIL_STORAGE_KEY);
+      if (raw) setCompletedSteps(JSON.parse(raw));
+    } catch {}
+  }, []);
+
+  const toggleStepCompleted = (stepId: string) => {
+    setCompletedSteps((prev) => {
+      const next = { ...prev, [stepId]: !prev[stepId] };
+      try {
+        localStorage.setItem(TRAIL_STORAGE_KEY, JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+  };
 
   const handleCopyArea = (areaId: string, text: string) => {
     navigator.clipboard.writeText(text);
@@ -64,74 +95,375 @@ export const BizusView: React.FC = () => {
     setExpandedId(expandedId === id ? null : id);
   };
 
+  const activeTrail = studyTrailsData.find((t) => t.subject === trailSubject) || studyTrailsData[0];
+  const activeTrailDone = activeTrail.steps.filter((s) => completedSteps[s.id]).length;
+
   return (
     <div className="space-y-4 max-w-4xl mx-auto pb-12">
-      {/* Cabeçalho Acadêmico com Sub-Abas de Revisão */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <Bookmark className="w-5 h-5 text-indigo-600" />
-            <h2 className="text-lg sm:text-xl font-bold text-slate-900">
-              Central de Revisão: Raio-X ENEM 2025, Técnicas de Chute & Bizus
-            </h2>
+      {/* Cabeçalho de Estudos com Seletor Principal: Trilha de Estudos vs Revisão */}
+      <div className="bg-white border border-slate-200 rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Bookmark className="w-5 h-5 text-indigo-600" />
+              <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">
+                Central de Estudos
+              </h2>
+            </div>
+            <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+              Escolha entre aprender a base passo a passo na <strong>Trilha de Estudos</strong> ou revisar rápido com o <strong>Raio-X 2025 e Bizus</strong>.
+            </p>
           </div>
-          <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-            Mapeamento completo do que caiu nas 90 questões da última prova (Caderno 5 Amarelo), engenharia reversa para chutar com alta probabilidade e macetes de resolução em 45 segundos.
-          </p>
         </div>
 
-        {/* Sub-navegação rápida */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+        {/* Seletor Principal: Trilha de Estudos vs Revisão */}
+        <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200/80">
           <button
-            onClick={() => setActiveSubTab('revisao')}
-            className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 border transition-all ${
-              activeSubTab === 'revisao'
-                ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
-                : 'bg-emerald-50/70 text-emerald-900 border-emerald-200 hover:bg-emerald-100'
+            onClick={() => setMainMode('trilha')}
+            className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all ${
+              mainMode === 'trilha'
+                ? 'bg-slate-900 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Layers className="w-4 h-4 shrink-0" />
-            <span>📚 Mega Revisão</span>
+            <Map className="w-4 h-4 shrink-0" />
+            <span>Trilha de Estudos</span>
           </button>
 
           <button
-            onClick={() => setActiveSubTab('mapeamento')}
-            className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 border transition-all ${
-              activeSubTab === 'mapeamento'
-                ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
-                : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+            onClick={() => setMainMode('revisao')}
+            className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all ${
+              mainMode === 'revisao'
+                ? 'bg-indigo-600 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <BarChart3 className="w-4 h-4 shrink-0" />
-            <span>📊 Raio-X 2025</span>
-          </button>
-
-          <button
-            onClick={() => setActiveSubTab('chute')}
-            className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 border transition-all ${
-              activeSubTab === 'chute'
-                ? 'bg-amber-500 text-white border-amber-500 shadow-xs'
-                : 'bg-amber-50/70 text-amber-900 border-amber-200 hover:bg-amber-100'
-            }`}
-          >
-            <Target className="w-4 h-4 shrink-0" />
-            <span>🎯 Chute & TRI</span>
-          </button>
-
-          <button
-            onClick={() => setActiveSubTab('bizus')}
-            className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 border transition-all ${
-              activeSubTab === 'bizus'
-                ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
-                : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-            }`}
-          >
-            <Zap className="w-4 h-4 shrink-0" />
-            <span>⚡ Bizus ({bizusData.length})</span>
+            <BookOpen className="w-4 h-4 shrink-0" />
+            <span>Revisão</span>
           </button>
         </div>
+
+        {/* Sub-navegação rápida da aba REVISÃO */}
+        {mainMode === 'revisao' && (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+            <button
+              onClick={() => setActiveSubTab('revisao')}
+              className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 border transition-all ${
+                activeSubTab === 'revisao'
+                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                  : 'bg-emerald-50/70 text-emerald-900 border-emerald-200 hover:bg-emerald-100'
+              }`}
+            >
+              <Layers className="w-4 h-4 shrink-0" />
+              <span>📚 Mega Revisão</span>
+            </button>
+
+            <button
+              onClick={() => setActiveSubTab('mapeamento')}
+              className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 border transition-all ${
+                activeSubTab === 'mapeamento'
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                  : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              <BarChart3 className="w-4 h-4 shrink-0" />
+              <span>📊 Raio-X 2025</span>
+            </button>
+
+            <button
+              onClick={() => setActiveSubTab('chute')}
+              className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 border transition-all ${
+                activeSubTab === 'chute'
+                  ? 'bg-amber-500 text-white border-amber-500 shadow-xs'
+                  : 'bg-amber-50/70 text-amber-900 border-amber-200 hover:bg-amber-100'
+              }`}
+            >
+              <Target className="w-4 h-4 shrink-0" />
+              <span>🎯 Chute & TRI</span>
+            </button>
+
+            <button
+              onClick={() => setActiveSubTab('bizus')}
+              className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 border transition-all ${
+                activeSubTab === 'bizus'
+                  ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
+                  : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              <Zap className="w-4 h-4 shrink-0" />
+              <span>⚡ Bizus ({bizusData.length})</span>
+            </button>
+          </div>
+        )}
       </div>
 
+      {/* ==================== MODO 1: TRILHA DE ESTUDOS POR MATÉRIA ==================== */}
+      {mainMode === 'trilha' && (
+        <div className="space-y-4 animate-in fade-in duration-150">
+          {/* Seletor das 4 Matérias */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {studyTrailsData.map((trail) => {
+              const badge = getSubjectBadge(trail.subject);
+              const Icon = badge.icon;
+              const doneCount = trail.steps.filter((s) => completedSteps[s.id]).length;
+              const isSelected = trailSubject === trail.subject;
+
+              return (
+                <button
+                  key={trail.subject}
+                  onClick={() => {
+                    setTrailSubject(trail.subject);
+                    setExpandedStepId(trail.steps[0]?.id ?? null);
+                  }}
+                  className={`p-3 rounded-2xl border text-left transition-all ${
+                    isSelected
+                      ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <span className="inline-flex items-center gap-1.5 font-bold text-xs sm:text-sm">
+                      <Icon className="w-4 h-4 shrink-0" />
+                      {trail.label}
+                    </span>
+                    <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md ${
+                      isSelected ? 'bg-white/15 text-white' : 'bg-slate-100 text-slate-600'
+                    }`}>
+                      {doneCount}/{trail.steps.length}
+                    </span>
+                  </div>
+                  <div className={`w-full h-1.5 rounded-full overflow-hidden ${isSelected ? 'bg-white/20' : 'bg-slate-100'}`}>
+                    <div
+                      className={`h-full rounded-full transition-all ${isSelected ? 'bg-emerald-400' : 'bg-emerald-500'}`}
+                      style={{ width: `${(doneCount / trail.steps.length) * 100}%` }}
+                    />
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Cabeçalho da Trilha Selecionada + CTA Principal (Duolingo Playbook) */}
+          {(() => {
+            const nextStep = activeTrail.steps.find((s) => !completedSteps[s.id]);
+            return (
+              <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-extrabold text-slate-900 text-sm sm:text-base">
+                      Trilha de {activeTrail.label}
+                    </h3>
+                    <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-lg">
+                      {activeTrailDone}/{activeTrail.steps.length}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-0.5">{activeTrail.tagline}</p>
+                </div>
+
+                {nextStep ? (
+                  <button
+                    onClick={() => setExpandedStepId(nextStep.id)}
+                    className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition-all shrink-0"
+                  >
+                    <Play className="w-3.5 h-3.5 fill-white" />
+                    <span>Continuar Etapa {nextStep.stepNumber}</span>
+                  </button>
+                ) : (
+                  <span className="px-3 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs text-center shrink-0">
+                    🏆 Trilha Concluída!
+                  </span>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* Etapas da Trilha (Timeline Vertical Conectada + Ilustração + Teste Rápido) */}
+          <div className="relative space-y-3">
+            {(() => {
+              const firstPendingId = activeTrail.steps.find((s) => !completedSteps[s.id])?.id;
+
+              return activeTrail.steps.map((step, idx) => {
+                const isDone = !!completedSteps[step.id];
+                const isNext = !isDone && step.id === firstPendingId;
+                const isExpanded = expandedStepId === step.id;
+                const isLast = idx === activeTrail.steps.length - 1;
+                const selectedQuizOpt = miniQuizAnswers[step.id];
+                const quizAnswered = selectedQuizOpt !== undefined;
+                const quizCorrect = selectedQuizOpt === step.miniQuiz.correctIndex;
+
+                return (
+                  <div key={step.id} className="relative flex gap-3 sm:gap-4">
+                    {/* Linha vertical conectora (Timeline) */}
+                    <div className="flex flex-col items-center shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => toggleStepCompleted(step.id)}
+                        title={isDone ? 'Marcar como pendente' : 'Marcar etapa como estudada'}
+                        className={`w-9 h-9 rounded-full flex items-center justify-center font-extrabold text-xs border-2 transition-all z-10 mt-3.5 ${
+                          isDone
+                            ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                            : isNext
+                            ? 'bg-indigo-600 text-white border-indigo-600 ring-4 ring-indigo-500/20 shadow-sm'
+                            : 'bg-white text-slate-600 border-slate-300 hover:border-slate-400'
+                        }`}
+                      >
+                        {isDone ? <Check className="w-4 h-4 stroke-[3]" /> : step.stepNumber}
+                      </button>
+
+                      {!isLast && (
+                        <div
+                          className={`w-0.5 flex-1 my-1 rounded-full ${
+                            isDone ? 'bg-emerald-400' : 'bg-slate-200'
+                          }`}
+                        />
+                      )}
+                    </div>
+
+                    {/* Card da Etapa */}
+                    <div
+                      className={`flex-1 bg-white border rounded-2xl transition-all shadow-2xs overflow-hidden mb-1 ${
+                        isDone
+                          ? 'border-emerald-300/80'
+                          : isNext
+                          ? 'border-indigo-400 ring-1 ring-indigo-200/60'
+                          : 'border-slate-200'
+                      }`}
+                    >
+                      <div
+                        onClick={() => setExpandedStepId(isExpanded ? null : step.id)}
+                        className="p-4 sm:p-5 cursor-pointer flex items-start justify-between gap-3 select-none hover:bg-slate-50/50"
+                      >
+                        <div>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600">
+                              Etapa {step.stepNumber}
+                            </span>
+                            {isNext && (
+                              <span className="text-[10px] font-extrabold text-white bg-indigo-600 px-2 py-0.5 rounded-full">
+                                PRÓXIMA
+                              </span>
+                            )}
+                            {isDone && (
+                              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                                ✓ Estudada
+                              </span>
+                            )}
+                          </div>
+                          <h4 className="font-bold text-slate-900 text-sm sm:text-base mt-0.5">
+                            {step.title}
+                          </h4>
+                          <p className="text-xs text-slate-500 mt-0.5">{step.subtitle}</p>
+                        </div>
+
+                        <button className="p-1 text-slate-400 hover:text-slate-600 shrink-0">
+                          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                        </button>
+                      </div>
+
+                      {isExpanded && (
+                        <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-3 border-t border-slate-100 bg-slate-50/40 space-y-3 text-xs sm:text-sm">
+                          {/* Ilustração Educativa Visual */}
+                          <TrailVisual stepId={step.id} />
+
+                          <div className="p-3.5 bg-white rounded-xl border border-slate-200/80 space-y-1">
+                            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                              📖 Base Simples (1 minuto de leitura)
+                            </div>
+                            <p className="text-slate-700 leading-relaxed">{step.summary}</p>
+                          </div>
+
+                          <div className="p-3.5 bg-amber-50/70 border border-amber-200 rounded-xl text-amber-950 flex items-start gap-2">
+                            <Lightbulb className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                            <div>
+                              <span className="font-bold text-amber-900 text-[11px] uppercase tracking-wider block mb-0.5">
+                                O que guardar na cabeça:
+                              </span>
+                              <span className="leading-relaxed text-xs sm:text-sm">{step.keyIdea}</span>
+                            </div>
+                          </div>
+
+                          {/* Mini Teste Rápido Interativo (Brilliant Playbook) */}
+                          <div className="p-3.5 bg-indigo-50/60 border border-indigo-200/80 rounded-xl space-y-2">
+                            <div className="text-[11px] font-extrabold uppercase tracking-wider text-indigo-900">
+                              ⚡ Teste Rápido (Fixação em 10s):
+                            </div>
+                            <p className="font-semibold text-slate-900 text-xs sm:text-sm">
+                              {step.miniQuiz.prompt}
+                            </p>
+                            <div className="grid grid-cols-1 gap-1.5">
+                              {step.miniQuiz.options.map((opt, oIdx) => {
+                                const isOptSelected = selectedQuizOpt === oIdx;
+                                const isOptCorrect = oIdx === step.miniQuiz.correctIndex;
+                                let style = 'bg-white border-slate-200 text-slate-800 hover:bg-slate-50';
+                                if (quizAnswered) {
+                                  if (isOptCorrect) {
+                                    style = 'bg-emerald-50 border-emerald-500 text-emerald-950 font-bold';
+                                  } else if (isOptSelected && !isOptCorrect) {
+                                    style = 'bg-rose-50 border-rose-400 text-rose-900';
+                                  } else {
+                                    style = 'bg-white/60 border-slate-200 opacity-50';
+                                  }
+                                }
+                                return (
+                                  <button
+                                    key={opt}
+                                    type="button"
+                                    onClick={() => {
+                                      setMiniQuizAnswers((prev) => ({ ...prev, [step.id]: oIdx }));
+                                      if (oIdx === step.miniQuiz.correctIndex && !completedSteps[step.id]) {
+                                        toggleStepCompleted(step.id);
+                                      }
+                                    }}
+                                    className={`w-full text-left px-3 py-2.5 rounded-xl border text-xs transition-all ${style}`}
+                                  >
+                                    {opt}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            {quizAnswered && (
+                              <p
+                                className={`text-xs font-semibold pt-1 ${
+                                  quizCorrect ? 'text-emerald-700' : 'text-rose-700'
+                                }`}
+                              >
+                                {quizCorrect ? '✅ ' : '💡 '}
+                                {step.miniQuiz.feedback}
+                              </p>
+                            )}
+                          </div>
+
+                          <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+                            <span className="text-[11px] text-slate-600">
+                              <strong>Como cai no ENEM:</strong> {step.enemExample}
+                            </span>
+
+                            <button
+                              onClick={() => toggleStepCompleted(step.id)}
+                              className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${
+                                isDone
+                                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                                  : 'bg-slate-900 text-white hover:bg-slate-800'
+                              }`}
+                            >
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>{isDone ? 'Etapa Concluída ✓' : 'Marcar como Estudada'}</span>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              });
+            })()}
+          </div>
+        </div>
+      )}
+
+      {/* ==================== MODO 2: REVISÃO (MEGA REVISÃO, RAIO-X, CHUTE & BIZUS) ==================== */}
+      {mainMode === 'revisao' && (
+        <>
       {/* ==================== ABA 0: MEGA REVISÃO POR ÁREA ==================== */}
       {activeSubTab === 'revisao' && (
         <div className="space-y-4 animate-in fade-in duration-150">
@@ -908,6 +1240,8 @@ export const BizusView: React.FC = () => {
             })}
           </div>
         </div>
+      )}
+        </>
       )}
     </div>
   );

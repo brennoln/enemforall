@@ -56,7 +56,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans selection:bg-slate-900 selection:text-white pb-20 md:pb-6">
+    <div className="min-h-dvh bg-slate-50 text-slate-800 flex flex-col font-sans selection:bg-slate-900 selection:text-white pb-24 md:pb-6">
       {/* Barra Superior - Compacta e Fixa */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-2xs">
         <div className="max-w-4xl mx-auto px-3 md:px-4 h-14 flex items-center justify-between">
@@ -107,7 +107,7 @@ export function App() {
               }`}
             >
               <BarChart3 className="w-3.5 h-3.5" />
-              <span>Revisão 2025 & Bizus</span>
+              <span>Estudos</span>
             </button>
             <button
               onClick={() => setCurrentTab('strategy')}
@@ -126,41 +126,38 @@ export function App() {
 
       {/* Conteúdo Principal */}
       <main className="flex-1 max-w-4xl w-full mx-auto px-3 sm:px-4 py-3 md:py-5">
-        {/* Faixa de Boas-Vindas para Quem Tem Pouco Tempo + Botão Instalar PWA / Status Offline */}
-        <div className="mb-3 p-2.5 sm:px-3.5 bg-white border border-slate-200 rounded-xl flex flex-wrap items-center justify-between gap-2 text-xs shadow-2xs">
-          <div className="flex items-center gap-2 text-slate-700 min-w-0">
-            {!isOnline ? (
-              <>
-                <WifiOff className="w-4 h-4 text-amber-600 shrink-0" />
-                <span className="truncate text-[11px] sm:text-xs font-medium text-amber-900">
-                  <strong>Modo Offline Ativo:</strong> todas as 245 questões e fórmulas seguem funcionando!
-                </span>
-              </>
-            ) : (
-              <>
-                <Coffee className="w-4 h-4 text-indigo-600 shrink-0" />
-                <span className="truncate text-[11px] sm:text-xs">
-                  <strong>Modo Intervalo:</strong> faça 1 ou 2 questões por pausa — funciona até offline!
-                </span>
-              </>
-            )}
-          </div>
+        {/* Faixa de Status Offline / Botão Instalar PWA (aparece apenas quando relevante para manter a tela limpa) */}
+        {(!isOnline || installPrompt) && (
+          <div className="mb-3 p-2.5 sm:px-3.5 bg-white border border-slate-200 rounded-2xl flex flex-wrap items-center justify-between gap-2 text-xs shadow-2xs">
+            <div className="flex items-center gap-2 text-slate-700 min-w-0">
+              {!isOnline ? (
+                <>
+                  <WifiOff className="w-4 h-4 text-amber-600 shrink-0" />
+                  <span className="truncate text-[11px] sm:text-xs font-medium text-amber-900">
+                    <strong>Modo Offline Ativo:</strong> todas as 245 questões e fórmulas seguem funcionando!
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Coffee className="w-4 h-4 text-indigo-600 shrink-0" />
+                  <span className="truncate text-[11px] sm:text-xs">
+                    Instale no celular para estudar no ônibus sem gastar internet!
+                  </span>
+                </>
+              )}
+            </div>
 
-          <div className="flex items-center gap-1.5 shrink-0">
             {installPrompt && (
               <button
                 onClick={handleInstallClick}
-                className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] sm:text-[11px] font-bold flex items-center gap-1 shadow-2xs transition-colors"
+                className="px-3 py-1 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold flex items-center gap-1.5 shadow-2xs transition-colors shrink-0"
               >
-                <Download className="w-3 h-3" />
+                <Download className="w-3.5 h-3.5" />
                 <span>Instalar App Offline</span>
               </button>
             )}
-            <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-              Sem Cadastro • Open Source
-            </span>
           </div>
-        </div>
+        )}
 
         {/* Abas */}
         {currentTab === 'quiz' && <QuizView />}
@@ -251,8 +248,8 @@ export function App() {
         </footer>
       </main>
 
-      {/* BARRA INFERIOR DE NAVEGAÇÃO FIXA NO CELULAR (4 ABAS PERFEITAS) */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-slate-200 z-50 px-2 py-2 flex items-center justify-around shadow-lg">
+      {/* BARRA INFERIOR DE NAVEGAÇÃO FIXA NO CELULAR (COM SAFE-AREA) */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-slate-200 z-40 px-2 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] flex items-center justify-around shadow-[0_-4px_20px_rgba(15,23,42,0.06)]">
         <button
           onClick={() => {
             setCurrentTab('quiz');
@@ -289,7 +286,7 @@ export function App() {
           }`}
         >
           <BookOpen className={`w-5 h-5 ${currentTab === 'bizus' ? 'stroke-[2.5]' : 'stroke-2'}`} />
-          <span className="text-[10px]">Revisão 2025</span>
+          <span className="text-[10px]">Estudos</span>
         </button>
 
         <button
