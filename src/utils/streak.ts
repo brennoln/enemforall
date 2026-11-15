@@ -94,3 +94,35 @@ export function incrementUserTodayAnswered(): { progress: UserDailyProgress; jus
 
   return { progress: updated, justUnlockedStreak: justUnlocked };
 }
+
+// Persistência de questões já resolvidas no aparelho (ideal para quem estuda em intervalos curtos)
+const SOLVED_KEY = 'enem_para_todos_solved_v1';
+
+export interface SolvedMap {
+  [questionId: string]: boolean; // true = acertou, false = errou
+}
+
+export function loadSolvedQuestions(): SolvedMap {
+  try {
+    const raw = localStorage.getItem(SOLVED_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+export function markQuestionSolved(questionId: string, isCorrect: boolean): SolvedMap {
+  const current = loadSolvedQuestions();
+  const updated: SolvedMap = { ...current, [questionId]: isCorrect };
+  try {
+    localStorage.setItem(SOLVED_KEY, JSON.stringify(updated));
+  } catch {}
+  return updated;
+}
+
+export function resetSolvedQuestions(): SolvedMap {
+  try {
+    localStorage.removeItem(SOLVED_KEY);
+  } catch {}
+  return {};
+}

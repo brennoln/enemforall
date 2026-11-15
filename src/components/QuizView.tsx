@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Question, Subject } from '../types';
 import { questionsData } from '../data/questions';
-import { loadUserDailyProgress, incrementUserTodayAnswered, UserDailyProgress } from '../utils/streak';
+import {
+  loadUserDailyProgress,
+  incrementUserTodayAnswered,
+  UserDailyProgress,
+  loadSolvedQuestions,
+  markQuestionSolved,
+  resetSolvedQuestions,
+  SolvedMap
+} from '../utils/streak';
 import confetti from 'canvas-confetti';
 import {
   CheckCircle2,
@@ -38,6 +46,7 @@ export const QuizView: React.FC = () => {
   const [selectedSubject, setSelectedSubject] = useState<Subject | 'all'>('all');
   const [filterMode, setFilterMode] = useState<'all' | 'enem2025' | 'specials'>('enem2025');
   const [sequentialOrder, setSequentialOrder] = useState<boolean>(true);
+  const [hideSolved, setHideSolved] = useState<boolean>(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState<number | 'all'>('all');
   const [questionsList, setQuestionsList] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -47,16 +56,18 @@ export const QuizView: React.FC = () => {
   const [quizFinished, setQuizFinished] = useState(false);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
-  // Progresso do Foguinho (Streak Diário)
+  // Progresso do Foguinho (Streak Diário) e Questões Salvas no Aparelho
   const [streakData, setStreakData] = useState<UserDailyProgress>(loadUserDailyProgress());
+  const [solvedMap, setSolvedMap] = useState<SolvedMap>(loadSolvedQuestions());
   const [streakCelebration, setStreakCelebration] = useState(false);
 
   // Carrega e atualiza streak ao montar
   useEffect(() => {
     setStreakData(loadUserDailyProgress());
+    setSolvedMap(loadSolvedQuestions());
   }, []);
 
-  const getFilteredBase = (subjectFilter: Subject | 'all') => {
+  const getFilteredBase = (subjectFilter: Subject | 'all', respectHideSolved = false) => {
     let filtered = questionsData.filter(
       (q) => subjectFilter === 'all' || q.subject === subjectFilter
     );
@@ -71,12 +82,16 @@ export const QuizView: React.FC = () => {
       filtered = filtered.filter((q) => q.difficulty === selectedDifficulty);
     }
 
+    if (respectHideSolved && hideSolved) {
+      filtered = filtered.filter((q) => solvedMap[q.id] === undefined);
+    }
+
     return filtered;
   };
 
   // Atualiza a lista de questões sempre que filtros mudarem
   useEffect(() => {
-    const filtered = getFilteredBase(selectedSubject);
+    const filtered = getFilteredBase(selectedSubject, true);
     if (filterMode === 'enem2025' && sequentialOrder) {
       setQuestionsList(filtered);
     } else {
@@ -87,7 +102,7 @@ export const QuizView: React.FC = () => {
     setIsConfirmed(false);
     setScore({ correct: 0, wrong: 0 });
     setQuizFinished(false);
-  }, [selectedSubject, filterMode, sequentialOrder, selectedDifficulty]);
+  }, [selectedSubject, filterMode, sequentialOrder, selectedDifficulty, hideSolved]);
 
   const currentQuestion: Question | undefined = questionsList[currentIndex];
 
@@ -106,7 +121,9 @@ export const QuizView: React.FC = () => {
     setIsConfirmed(true);
     const isCorrect = selectedOption === currentQuestion.correctAnswer;
 
-    // Incrementa contagem diária do Foguinho
+    // Salva progresso da questão no aparelho e incrementa contagem diária do Foguinho
+    const updatedSolved = markQuestionSolved(currentQuestion.id, isCorrect);
+    setSolvedMap(updatedSolved);
     const { progress, justUnlockedStreak } = incrementUserTodayAnswered();
     setStreakData(progress);
 
@@ -218,18 +235,33 @@ export const QuizView: React.FC = () => {
 
   if (!currentQuestion) {
     return (
-      <div className="text-center py-12 bg-white rounded-2xl border border-slate-200 p-6">
-        <p className="text-slate-600 text-sm mb-3">Nenhuma questão encontrada para este filtro selecionado.</p>
-        <button
-          onClick={() => {
-            setFilterMode('all');
-            setSelectedDifficulty('all');
-            setSelectedSubject('all');
-          }}
-          className="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-semibold"
-        >
-          Limpar Filtros e Ver Todas (245)
-        </button>
+      <div className="text-center py-12 bg-white rounded-2xl border border-slate-200 p-6 space-y-3">
+        <p className="text-slate-700 font-semibold text-sm">
+          {hideSolved
+            ? '🎉 Você já resolveu todas as questões deste filtro!'
+            : 'Nenhuma questão encontrada para este filtro selecionado.'}
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {hideSolved && (
+            <button
+              onClick={() => setHideSolved(false)}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold"
+            >
+              Mostrar Questões Já Resolvidas
+            </button>
+          )}
+          <button
+            onClick={() => {
+              setHideSolved(false);
+              setFilterMode('all');
+              setSelectedDifficulty('all');
+              setSelectedSubject('all');
+            }}
+            className="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-semibold"
+          >
+            Ver Todas as Questões (245)
+          </button>
+        </div>
       </div>
     );
   }
@@ -237,6 +269,7 @@ export const QuizView: React.FC = () => {
   const badge = getSubjectBadge(currentQuestion.subject);
   const Icon = badge.icon;
   const streakAchievedToday = streakData.todayCount >= 10;
+  const totalSolvedCount = Object.keys(solvedMap).length;
 
   return (
     <div className="max-w-3xl mx-auto space-y-3 pb-8">
@@ -293,8 +326,8 @@ export const QuizView: React.FC = () => {
             </div>
             <p className="text-[11px] text-slate-600">
               {streakAchievedToday
-                ? `Sensacional! Você já resolveu ${streakData.todayCount} questões hoje!`
-                : `Resolva ${10 - streakData.todayCount} questões hoje para manter seu foguinho ativo!`}
+                ? `Mandou bem! Você já resolveu ${streakData.todayCount} questões hoje!`
+                : `Fez 1 ou 2 no intervalo? Já conta! Faltam ${10 - streakData.todayCount} para acender o foguinho de hoje.`}
             </p>
           </div>
         </div>
@@ -479,8 +512,8 @@ export const QuizView: React.FC = () => {
           </div>
         </div>
 
-        {/* Placar Acadêmico Rápido */}
-        <div className="flex items-center justify-between pt-1.5 border-t border-slate-100 text-[11px] sm:text-xs px-0.5">
+        {/* Placar Acadêmico Rápido + Progresso Salvo para Estudo no Intervalo */}
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-1.5 border-t border-slate-100 text-[11px] sm:text-xs px-0.5">
           <div className="flex items-center gap-3">
             <span className="text-emerald-700 font-medium flex items-center gap-1">
               <CheckCircle2 className="w-3.5 h-3.5" /> {score.correct} acertos
@@ -488,14 +521,40 @@ export const QuizView: React.FC = () => {
             <span className="text-rose-600 font-medium flex items-center gap-1">
               <XCircle className="w-3.5 h-3.5" /> {score.wrong} erros
             </span>
+            <span className="hidden sm:inline text-slate-500 font-medium">
+              • Salvas: <strong className="text-slate-700">{totalSolvedCount}/{questionsData.length}</strong>
+            </span>
           </div>
 
-          <button
-            onClick={handleNextQuestion}
-            className="text-[11px] text-slate-500 hover:text-slate-800 underline transition-colors"
-          >
-            Pular questão →
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setHideSolved(!hideSolved)}
+              className={`px-2 py-0.5 rounded-md text-[10px] sm:text-[11px] font-semibold border transition-all ${
+                hideSolved
+                  ? 'bg-indigo-600 text-white border-indigo-600'
+                  : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              {hideSolved ? '✓ Só Inéditas' : 'Pular Já Resolvidas'}
+            </button>
+
+            {totalSolvedCount > 0 && (
+              <button
+                onClick={() => setSolvedMap(resetSolvedQuestions())}
+                title="Zerar histórico de questões resolvidas"
+                className="text-[10px] text-slate-400 hover:text-rose-600 underline"
+              >
+                Zerar
+              </button>
+            )}
+
+            <button
+              onClick={handleNextQuestion}
+              className="text-[11px] text-slate-600 hover:text-slate-900 font-medium underline transition-colors"
+            >
+              Pular →
+            </button>
+          </div>
         </div>
       </div>
 
@@ -533,9 +592,22 @@ export const QuizView: React.FC = () => {
             </span>
           </div>
 
-          <span className="px-2 py-0.5 rounded-md text-[10px] sm:text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 font-mono">
-            {currentQuestion.source}
-          </span>
+          <div className="flex items-center gap-1.5">
+            {solvedMap[currentQuestion.id] !== undefined && (
+              <span
+                className={`px-2 py-0.5 rounded-md text-[10px] font-bold border ${
+                  solvedMap[currentQuestion.id]
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                    : 'bg-amber-50 text-amber-800 border-amber-200'
+                }`}
+              >
+                {solvedMap[currentQuestion.id] ? '✓ Já acertou' : '↺ Revisar'}
+              </span>
+            )}
+            <span className="px-2 py-0.5 rounded-md text-[10px] sm:text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 font-mono">
+              {currentQuestion.source}
+            </span>
+          </div>
         </div>
 
         {/* Contexto Enxuto Acadêmico */}

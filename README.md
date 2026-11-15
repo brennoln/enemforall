@@ -1,34 +1,34 @@
-# 🎓 ENEM Turbo 2º Dia • Open Source Learning Platform
+# 🎓 ENEM Para Todos • Estudo Rápido no Intervalo (Open Source)
 
 <p align="center">
   <img src="https://img.shields.io/badge/Status-Ativo-emerald?style=for-the-badge" alt="Status Ativo" />
   <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="MIT License" />
   <img src="https://img.shields.io/badge/Stack-React%20%7C%20TypeScript%20%7C%20Tailwind-indigo?style=for-the-badge" alt="Stack" />
-  <img src="https://img.shields.io/badge/Foco-2º%20Dia%20ENEM%20(Natureza%20&%20Matemática)-orange?style=for-the-badge" alt="Foco ENEM" />
+  <img src="https://img.shields.io/badge/Quest%C3%B5es-245%20(Inclui%20ENEM%202025)-orange?style=for-the-badge" alt="245 Questões" />
 </p>
 
-> Uma plataforma web progressiva, leve e minimalista, desenvolvida sob a filosofia de **aprendizado ativo em intervalos curtos (micro-learning)**. Criada especialmente para estudantes que trabalham ou têm rotinas corridas e precisam consolidar com máxima agilidade os conteúdos mais recorrentes do **2º Dia do ENEM** (Ciências da Natureza e Matemática).
+> Uma plataforma web **100% gratuita, sem cadastro, sem anúncios e de código aberto**, criada para quem trabalha, pega transporte público ou concilia outra faculdade e só tem alguns minutos no intervalo para estudar. Focada em **aprendizado ativo de tiro curto (micro-learning)** para o **2º Dia do ENEM** (Ciências da Natureza e Matemática).
 
 ---
 
 ## 🎯 O Problema que Resolvemos
 
-A maioria das plataformas tradicionais de preparação para o ENEM exige longas horas ininterruptas e foca em videoaulas extensas. No entanto, muitos vestibulandos:
-- Conciliam trabalho, estágio ou outra faculdade com os estudos;
-- Precisam de **revisão de tiro curto** entre intervalos (almoço, transporte público, pausas);
-- Perdem muitos pontos na **TRI (Teoria de Resposta ao Item)** por gastarem tempo excessivo em contas manuais gigantescas de Matemática e chegarem esgotados nas questões de Natureza.
+A maioria das plataformas tradicionais de preparação para o ENEM exige mensalidades caras, longas horas ininterruptas e videoaulas extensas. No entanto, milhões de estudantes:
+- Trabalham em tempo integral, fazem estágio ou cuidam da família e não podem pagar cursinho;
+- Só conseguem abrir o celular por **5 a 10 minutos no intervalo do almoço ou no ônibus** para fazer 1 ou 2 questões;
+- Precisam de explicações diretas ao ponto, sem enrolação, que ensinem **como matar a questão rápido** e como não cair nas pegadinhas da **TRI (Teoria de Resposta ao Item)**.
 
-O **ENEM Turbo 2º Dia** ataca diretamente esses gargalos através de agilidade mental, técnicas de resolução rápida (< 45s) e retenção profunda de fórmulas.
+O **ENEM Para Todos** entrega acesso livre e imediato: abriu, resolveu 1 ou 2 questões, salvou automaticamente no aparelho e seguiu o dia.
 
 ---
 
 ## ✨ Principais Funcionalidades
 
-### 1. 🔀 Banco de Questões Inteligente & Randomizado
-- **75 questões autênticas e contextualizadas dos últimos 3 anos do ENEM** (45 de Matemática, 10 de Física, 10 de Química e 10 de Biologia);
-- Algoritmo de **embaralhamento aleatório (Fisher-Yates)** a cada rodada, garantindo treino sem vício de ordem;
+### 1. 🔀 Banco com 245 Questões & Prova Oficial ENEM 2025 Completa
+- **90 questões oficiais do ENEM 2025 (2º Dia • Q91 a Q180)** com todas as **imagens, gráficos, tabelas e alternativas ilustradas** em alta definição, mais **155 questões** de anos anteriores e tópicos campeões;
+- **Modo Intervalo com Progresso Salvo:** o aparelho lembra automaticamente quais questões você já resolveu (`LocalStorage`), permitindo clicar em **"Pular Já Resolvidas"** para aproveitar cada minuto livre;
 - **Etiqueta Especial Amarela (`⭐ Questão Especial • Top Campeã`)**: filtro exclusivo para praticar as **25 questões de maior recorrência histórica** da prova (10 de Matemática, 5 de Física, 5 de Química e 5 de Biologia);
-- Resoluções comentadas focadas em **Bizus Relâmpago de menos de 45 segundos**, otimização de tempo e alertas de pegadinhas clássicas da banca.
+- Resoluções comentadas focadas em **Bizus Relâmpago (< 45s)**, passo a passo limpo, economia de tempo e alertas de pegadinhas da banca.
 
 ### 2. 🔥 Sistema de Foguinho (Daily Streak)
 - Mecanismo de gamificação com **meta diária de 10 questões resolvidas**;

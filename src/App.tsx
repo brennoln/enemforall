@@ -8,11 +8,11 @@ import {
   Compass,
   CheckCircle2,
   Clock,
-  Heart,
   Brain,
   Target,
   BarChart3,
-  Zap
+  Zap,
+  Coffee
 } from 'lucide-react';
 
 export function App() {
@@ -29,12 +29,12 @@ export function App() {
             </div>
             <div>
               <div className="font-bold text-xs md:text-sm tracking-tight text-slate-900 flex items-center gap-1.5">
-                ENEM • 2º Dia
-                <span className="px-1.5 py-0.2 text-[9px] font-semibold bg-indigo-50 text-indigo-700 rounded border border-indigo-200">
-                  +Prova 2025 Oficial
+                ENEM Para Todos
+                <span className="px-1.5 py-0.2 text-[9px] font-semibold bg-emerald-50 text-emerald-700 rounded border border-emerald-200">
+                  Livre & Gratuito
                 </span>
               </div>
-              <p className="text-[10px] text-slate-500 hidden sm:block">245 Questões (90 ENEM 2025 com Imagens) • Fórmulas & Revisão</p>
+              <p className="text-[10px] text-slate-500 hidden sm:block">Feito para quem trabalha e estuda no intervalo • Natureza & Matemática</p>
             </div>
           </div>
 
@@ -89,14 +89,16 @@ export function App() {
 
       {/* Conteúdo Principal */}
       <main className="flex-1 max-w-4xl w-full mx-auto px-3 sm:px-4 py-3 md:py-5">
-        {/* Faixa Motivacional Compacta */}
-        <div className="mb-3 p-2.5 bg-white border border-slate-200 rounded-xl flex items-center justify-between gap-2 text-xs shadow-2xs">
+        {/* Faixa de Boas-Vindas para Quem Tem Pouco Tempo */}
+        <div className="mb-3 p-2.5 sm:px-3.5 bg-white border border-slate-200 rounded-xl flex items-center justify-between gap-2 text-xs shadow-2xs">
           <div className="flex items-center gap-2 text-slate-700 min-w-0">
-            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500/20 shrink-0" />
-            <span className="truncate text-[11px] sm:text-xs">Para sua mente brilhante: Prova ENEM 2025 completa + Fórmulas + Técnicas de Chute! 💖</span>
+            <Coffee className="w-4 h-4 text-indigo-600 shrink-0" />
+            <span className="truncate text-[11px] sm:text-xs">
+              <strong>Modo Intervalo:</strong> faça 1 ou 2 questões por pausa — seu progresso fica salvo aqui!
+            </span>
           </div>
-          <span className="text-[10px] font-medium text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200 shrink-0">
-            245 Questões
+          <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 shrink-0">
+            Sem Cadastro • Open Source
           </span>
         </div>
 
@@ -168,6 +170,25 @@ export function App() {
             </div>
           </div>
         )}
+
+        {/* Rodapé Open Source & Acessibilidade */}
+        <footer className="mt-6 pt-4 border-t border-slate-200/80 text-center text-[11px] text-slate-500 space-y-1">
+          <p>
+            <strong className="text-slate-700">ENEM Para Todos</strong> — Projeto gratuito, sem anúncios e de código aberto para quem trabalha e luta pela aprovação.
+          </p>
+          <p>
+            Contribua ou compartilhe no{' '}
+            <a
+              href="https://github.com/brennoln/enemforall"
+              target="_blank"
+              rel="noreferrer"
+              className="text-indigo-600 hover:underline font-medium"
+            >
+              GitHub (brennoln/enemforall)
+            </a>
+            .
+          </p>
+        </footer>
       </main>
 
       {/* BARRA INFERIOR DE NAVEGAÇÃO FIXA NO CELULAR (4 ABAS PERFEITAS) */}
