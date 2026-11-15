@@ -17,14 +17,25 @@ import {
   Crosshair,
   Sparkles,
   CheckCircle2,
-  AlertTriangle
+  AlertTriangle,
+  Layers,
+  Copy,
+  Check
 } from 'lucide-react';
 
 export const BizusView: React.FC = () => {
-  const [activeSubTab, setActiveSubTab] = useState<'mapeamento' | 'chute' | 'bizus'>('mapeamento');
+  const [activeSubTab, setActiveSubTab] = useState<'revisao' | 'mapeamento' | 'chute' | 'bizus'>('revisao');
+  const [megaAreaFilter, setMegaAreaFilter] = useState<'all' | 'biologia' | 'quimica' | 'fisica' | 'geometria'>('all');
+  const [copiedArea, setCopiedArea] = useState<string | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<Subject | 'all'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  const handleCopyArea = (areaId: string, text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedArea(areaId);
+    setTimeout(() => setCopiedArea(null), 2000);
+  };
 
   const filteredBizus = bizusData.filter((b) => {
     const matchesSubject = selectedSubject === 'all' || b.subject === selectedSubject;
@@ -70,44 +81,376 @@ export const BizusView: React.FC = () => {
         </div>
 
         {/* Sub-navegação rápida */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+          <button
+            onClick={() => setActiveSubTab('revisao')}
+            className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 border transition-all ${
+              activeSubTab === 'revisao'
+                ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                : 'bg-emerald-50/70 text-emerald-900 border-emerald-200 hover:bg-emerald-100'
+            }`}
+          >
+            <Layers className="w-4 h-4 shrink-0" />
+            <span>📚 Mega Revisão</span>
+          </button>
+
           <button
             onClick={() => setActiveSubTab('mapeamento')}
-            className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 border transition-all ${
+            className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 border transition-all ${
               activeSubTab === 'mapeamento'
                 ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
                 : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
             }`}
           >
             <BarChart3 className="w-4 h-4 shrink-0" />
-            <span>📊 O Que Mais Caiu (2025)</span>
+            <span>📊 Raio-X 2025</span>
           </button>
 
           <button
             onClick={() => setActiveSubTab('chute')}
-            className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 border transition-all ${
+            className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 border transition-all ${
               activeSubTab === 'chute'
                 ? 'bg-amber-500 text-white border-amber-500 shadow-xs'
                 : 'bg-amber-50/70 text-amber-900 border-amber-200 hover:bg-amber-100'
             }`}
           >
             <Target className="w-4 h-4 shrink-0" />
-            <span>🎯 Dicas de Chute & TRI</span>
+            <span>🎯 Chute & TRI</span>
           </button>
 
           <button
             onClick={() => setActiveSubTab('bizus')}
-            className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 border transition-all ${
+            className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 border transition-all ${
               activeSubTab === 'bizus'
                 ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
                 : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
             }`}
           >
             <Zap className="w-4 h-4 shrink-0" />
-            <span>⚡ Cards de Bizus ({bizusData.length})</span>
+            <span>⚡ Bizus ({bizusData.length})</span>
           </button>
         </div>
       </div>
+
+      {/* ==================== ABA 0: MEGA REVISÃO POR ÁREA ==================== */}
+      {activeSubTab === 'revisao' && (
+        <div className="space-y-4 animate-in fade-in duration-150">
+          {/* Filtro por Área */}
+          <div className="flex flex-wrap gap-1.5 bg-white border border-slate-200 p-2.5 rounded-2xl shadow-2xs">
+            {[
+              { id: 'all', label: '📚 Todas as Áreas' },
+              { id: 'biologia', label: '🧬 Biologia' },
+              { id: 'quimica', label: '⚗️ Química' },
+              { id: 'fisica', label: '⚡ Física' },
+              { id: 'geometria', label: '📐 Geometria Espacial' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setMegaAreaFilter(tab.id as any)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                  megaAreaFilter === tab.id
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* 1. BIOLOGIA */}
+          {(megaAreaFilter === 'all' || megaAreaFilter === 'biologia') && (
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+              <div className="flex items-center justify-between gap-2 pb-3 border-b border-slate-100">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-teal-50 text-teal-700 border border-teal-200">
+                    <Dna className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-sm sm:text-base">
+                      🧬 Biologia — Mega Revisão (40% da prova é Ecologia + Saúde)
+                    </h3>
+                    <p className="text-xs text-slate-500">Ecologia, Imunologia, Parasitologia, Citologia e Genética</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() =>
+                    handleCopyArea(
+                      'biologia',
+                      `🧬 BIOLOGIA — MEGA REVISÃO ENEM\n• Espécie Exótica Invasora: sem predador natural, compete com nativas e reduz biodiversidade.\n• Eutrofização: esgoto/adubo (N e P) -> algas bloqueiam luz -> bactérias consomem O2 -> peixes morrem asfixiados.\n• Magnificação Trófica: mercúrio/DDT acumula mais no predador de topo.\n• Caatinga: espinhos, cutícula grossa e estômatos que fecham de dia.\n• Ciclo do Nitrogênio: Rhizobium fixa N2; Nitrosomonas/Nitrobacter formam nitrato (NO3-).\n• Vacina = antígeno + memória (ativa/preventiva). Soro = anticorpos prontos (passiva/curativa).\n• Esquistossomose: caramujo Biomphalaria + cercária pela pele (prevenção: saneamento).\n• Lisossomo: digestão celular/autofagia | Mitocôndria: ATP | Ribossomo: proteínas | Golgi: secreção/acrossomo.\n• Fotossíntese: O2 vem da H2O! Codominância: expressa os dois alelos (ex: AB).`
+                    )
+                  }
+                  className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1 shrink-0"
+                >
+                  {copiedArea === 'biologia' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedArea === 'biologia' ? 'Copiado!' : 'Copiar'}</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                <div className="p-3.5 rounded-xl bg-teal-50/50 border border-teal-200/70 space-y-2">
+                  <div className="font-bold text-teal-950 text-xs sm:text-sm">🌿 Ecologia & Meio Ambiente</div>
+                  <ul className="space-y-1.5 text-slate-700 leading-relaxed">
+                    <li><strong>• Espécie Invasora:</strong> sem predador natural, vence a nativa por competição (Exclusão de Gause) e reduz a biodiversidade.</li>
+                    <li><strong>• Eutrofização:</strong> esgoto/adubo (N e P) ➔ explosão de algas ➔ bloqueia luz ➔ bactérias decompositoras consomem TODO o O₂ ➔ peixes morrem asfixiados.</li>
+                    <li><strong>• Magnificação Trófica:</strong> metal pesado (mercúrio/DDT) não é degradado e acumula mais no <strong>predador de topo</strong>.</li>
+                    <li><strong>• Caatinga (Xerófitas):</strong> folhas viram espinhos, cutícula grossa (cera) e estômatos fecham de dia.</li>
+                    <li><strong>• Ciclo do Nitrogênio:</strong> <em>Rhizobium</em> (leguminosas) fixa N₂; <em>Nitrosomonas/Nitrobacter</em> fazem nitrificação (geram NO₃⁻).</li>
+                  </ul>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                  <div className="font-bold text-slate-900 text-xs sm:text-sm">💉 Imunologia & Parasitologia</div>
+                  <ul className="space-y-1.5 text-slate-700 leading-relaxed">
+                    <li><strong>• Vacina:</strong> contém <strong>ANTÍGENO</strong> ➔ estimula anticorpos + <strong>memória imunológica</strong> (Ativa e Preventiva).</li>
+                    <li><strong>• Soro:</strong> contém <strong>ANTICORPOS PRONTOS</strong> ➔ ação imediata em picada de cobra/escorpião (Passiva e Curativa).</li>
+                    <li><strong>• Esquistossomose:</strong> caramujo <em>Biomphalaria</em> na lagoa + larva cercária entra pela pele. Prevenção: saneamento básico!</li>
+                    <li><strong>• Vetores Clássicos:</strong> Dengue/Zika (<em>Aedes</em>) • Chagas (<em>Barbeiro</em> - fezes) • Malária (<em>Anopheles</em>) • Leishmaniose (<em>Mosquito-palha</em>).</li>
+                  </ul>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                  <div className="font-bold text-slate-900 text-xs sm:text-sm">🔬 Citologia, Genética & Vitaminas</div>
+                  <ul className="space-y-1.5 text-slate-700 leading-relaxed">
+                    <li><strong>• Organelas:</strong> Lisossomo (digestão/autofagia), Mitocôndria (ATP), Ribossomo (proteínas), Golgi (secreção e acrossomo).</li>
+                    <li><strong>• Fotossíntese:</strong> O O₂ vem da quebra da <strong>ÁGUA (H₂O)</strong>! (Sulfobactérias usam H₂S e liberam Enxofre).</li>
+                    <li><strong>• Codominância:</strong> heterozigoto expressa os DOIS alelos juntos (ex: sangue AB).</li>
+                    <li><strong>• Transgênico vs. Clone:</strong> Transgênico recebe gene de outra espécie; Clone é cópia idêntica.</li>
+                    <li><strong>• Vitaminas:</strong> A (visão, lipossolúvel) • C (antioxidante/escorbuto, hidrossolúvel) • D (fixa cálcio com Sol).</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 2. QUÍMICA */}
+          {(megaAreaFilter === 'all' || megaAreaFilter === 'quimica') && (
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+              <div className="flex items-center justify-between gap-2 pb-3 border-b border-slate-100">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <TestTube2 className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-sm sm:text-base">
+                      ⚗️ Química — Mega Revisão (80% é Físico-Química + Orgânica)
+                    </h3>
+                    <p className="text-xs text-slate-500">Polaridade, Funções Orgânicas, Pilhas (CRAO), Gases, pH e Tratamento de Água</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() =>
+                    handleCopyArea(
+                      'quimica',
+                      `⚗️ QUÍMICA — MEGA REVISÃO ENEM\n• Polaridade: mais -OH e cadeia curta = solúvel em água. Cauda longa de carbono = apolar (gordura).\n• Funções: -OH no anel benzênico = FENOL (ácido); -OH em C saturado = ÁLCOOL; N ligado a C=O = AMIDA; N sem C=O = AMINA (básica).\n• Descarboxilação (-COOH): libera CO2.\n• Pilhas (CRAO): Cátodo Reduz (maior E°); Ânodo Oxida (menor E°). ddp = E°maior - E°menor > 0.\n• Gases em água: dissolvem mais em água FRIA e ALTA pressão.\n• pH = -log[H+]: 10^-3 -> pH 3. Cada -1 no pH = 10x mais ácido.\n• Le Chatelier: +Pressão vai pro menor nº de mols gasosos; +Temp favorece endotérmica (ΔH > 0).\n• Queima/combustão: sempre exotérmica (ΔH < 0). Gases: PV=nRT (K = °C + 273).`
+                    )
+                  }
+                  className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1 shrink-0"
+                >
+                  {copiedArea === 'quimica' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedArea === 'quimica' ? 'Copiado!' : 'Copiar'}</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                <div className="p-3.5 rounded-xl bg-emerald-50/50 border border-emerald-200/70 space-y-2">
+                  <div className="font-bold text-emerald-950 text-xs sm:text-sm">🧪 Orgânica & Polaridade</div>
+                  <ul className="space-y-1.5 text-slate-700 leading-relaxed">
+                    <li><strong>• Semelhante dissolve semelhante:</strong> mais <strong>-OH</strong> e cadeia curta = solúvel em água; cauda longa de C = apolar (gordura/óleo).</li>
+                    <li><strong>• Sabões/Surfactantes:</strong> formam <strong>micelas</strong> (cauda apolar na gordura; cabeça polar na água).</li>
+                    <li><strong>• Funções Clássicas:</strong> -OH no benzeno = <strong>FENOL</strong> • -OH em C saturado = <strong>ÁLCOOL</strong> • N com C=O = <strong>AMIDA</strong> • N sem C=O = <strong>AMINA</strong> (básica — cheiro de peixe sai com limão!).</li>
+                    <li><strong>• Descarboxilação:</strong> perdeu grupo -COOH? Liberou gás <strong>CO₂</strong>!</li>
+                  </ul>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                  <div className="font-bold text-slate-900 text-xs sm:text-sm">🔋 Eletroquímica (CRAO)</div>
+                  <ul className="space-y-1.5 text-slate-700 leading-relaxed">
+                    <li><strong>• CRAO:</strong> <strong>C</strong>átodo <strong>R</strong>eduz (ganha e⁻, maior E°) | <strong>Â</strong>nodo <strong>O</strong>xida (perde e⁻, menor E°).</li>
+                    <li><strong>• Fluxo de elétrons:</strong> sempre do <strong>Ânodo ➔ Cátodo</strong>.</li>
+                    <li><strong>• ddp da pilha:</strong> <code className="font-mono font-bold">ΔE° = E°(maior) - E°(menor)</code> (sempre positivo na pilha!).</li>
+                    <li><strong>• Metal de sacrifício:</strong> menor E° que o ferro (Zinco/Magnésio) — oxida no lugar do ferro para proteger cascos e canos.</li>
+                  </ul>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                  <div className="font-bold text-slate-900 text-xs sm:text-sm">⚖️ Físico-Química & Água</div>
+                  <ul className="space-y-1.5 text-slate-700 leading-relaxed">
+                    <li><strong>• Gases em líquidos:</strong> gás dissolve mais em água <strong>FRIA</strong> e sob <strong>ALTA pressão</strong>.</li>
+                    <li><strong>• pH sem log:</strong> [H⁺] = 10⁻³ ➔ pH = 3. Cada 1 unidade a menos = <strong>10× mais ácido</strong>.</li>
+                    <li><strong>• Meia-vida:</strong> cai pela metade a cada período (100% ➔ 50% ➔ 25% ➔ 12,5%).</li>
+                    <li><strong>• Le Chatelier:</strong> +Pressão ➔ menor nº de mols gasosos; +Temp ➔ endotérmica (ΔH &gt; 0). Combustão é sempre exotérmica (ΔH &lt; 0).</li>
+                    <li><strong>• Gases & Água:</strong> <code className="font-mono font-bold">P·V = n·R·T</code> (K = °C + 273). Tratamento: Floculação ➔ Decantação ➔ Filtração (carvão = adsorção) ➔ Cloração. Água destilada não conduz corrente!</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 3. FÍSICA */}
+          {(megaAreaFilter === 'all' || megaAreaFilter === 'fisica') && (
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+              <div className="flex items-center justify-between gap-2 pb-3 border-b border-slate-100">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-amber-50 text-amber-700 border border-amber-200">
+                    <Atom className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-sm sm:text-base">
+                      ⚡ Física — Mega Revisão (Elétrica + Ondas + Mecânica = 80%)
+                    </h3>
+                    <p className="text-xs text-slate-500">Eletrodinâmica, Ondulatória, Acústica, Cinemática, Plano Inclinado e Calorimetria</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() =>
+                    handleCopyArea(
+                      'fisica',
+                      `⚡ FÍSICA — MEGA REVISÃO ENEM\n• Elétrica: U = R·i | P = U·i = R·i² = U²/R | Consumo (kWh) = (P_W / 1000) × horas.\n• Tomadas da casa = PARALELO (mesma voltagem U; se 1 queima, outras ficam acesas; i_total = P_total / U).\n• Gerador: U = E - r·i | Indução de Faraday: precisa de VARIAÇÃO do fluxo magnético.\n• Ondas: v = λ·f e f = 1/T. Na refração, a FREQUÊNCIA (f) NUNCA MUDA!\n• Decibel: +10 dB = 10x na intensidade (+20 dB = 100x).\n• Torricelli: v² = v0² + 2·a·ΔS | Rampa/Atrito: massa NÃO altera aceleração (a = g(senθ - μ·cosθ)).\n• Pressão: P = F/A | P = d·g·h.\n• Calor: Q = m·c·ΔT (sensível) | Q = m·L (latente). Irradiação é a única no VÁCUO (espelho reflete, preto absorve).`
+                    )
+                  }
+                  className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1 shrink-0"
+                >
+                  {copiedArea === 'fisica' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedArea === 'fisica' ? 'Copiado!' : 'Copiar'}</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                <div className="p-3.5 rounded-xl bg-amber-50/50 border border-amber-200/70 space-y-2">
+                  <div className="font-bold text-amber-950 text-xs sm:text-sm">🔌 Eletrodinâmica & Magnetismo</div>
+                  <ul className="space-y-1.5 text-slate-700 leading-relaxed">
+                    <li><strong>• Fórmulas de Ouro:</strong> <code className="font-mono font-bold">U = R·i</code> | <code className="font-mono font-bold">P = U·i</code> | <code className="font-mono font-bold">P = R·i²</code> | <code className="font-mono font-bold">P = U²/R</code>.</li>
+                    <li><strong>• Conta de luz (kWh):</strong> <code className="font-mono font-bold">E = (P_Watts / 1000) × horas</code>.</li>
+                    <li><strong>• Paralelo (Casa):</strong> mesma tensão U em tudo; corrente total é <code className="font-mono font-bold">i = P_total / U</code>; se 1 queima, outras seguem acesas.</li>
+                    <li><strong>• Série:</strong> mesma corrente i; se 1 queima, apaga tudo!</li>
+                    <li><strong>• Geradores & Faraday:</strong> <code className="font-mono font-bold">U = E - r·i</code>. Indução só ocorre com <strong>variação do fluxo magnético</strong>.</li>
+                  </ul>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                  <div className="font-bold text-slate-900 text-xs sm:text-sm">🌊 Ondulatória & Acústica</div>
+                  <ul className="space-y-1.5 text-slate-700 leading-relaxed">
+                    <li><strong>• Equação da Onda:</strong> <code className="font-mono font-bold">v = λ · f</code> e <code className="font-mono font-bold">f = 1 / T</code>.</li>
+                    <li><strong>• Regra da Refração:</strong> mudou de meio? A <strong>FREQUÊNCIA (f) NUNCA MUDA!</strong> Se <em>v</em> cai, <em>λ</em> cai junto.</li>
+                    <li><strong>• Escala Decibel (dB):</strong> somar <strong>+10 dB</strong> multiplica a intensidade sonora por <strong>10×</strong> (+20 dB = 100×; +30 dB = 1.000×).</li>
+                    <li><strong>• Ressonância:</strong> frequência externa iguala a frequência natural de oscilação do objeto.</li>
+                  </ul>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                  <div className="font-bold text-slate-900 text-xs sm:text-sm">🚀 Mecânica & Termologia</div>
+                  <ul className="space-y-1.5 text-slate-700 leading-relaxed">
+                    <li><strong>• Cinemática:</strong> <code className="font-mono font-bold">v² = v₀² + 2·a·ΔS</code> (Torricelli). Eco: divida o tempo por 2!</li>
+                    <li><strong>• Rampa/Atrito:</strong> a massa NÃO altera a aceleração (<code className="font-mono font-bold">a = g(sen θ - μ·cos θ)</code>).</li>
+                    <li><strong>• Pressão:</strong> <code className="font-mono font-bold">P = F / A</code> | Hidrostática: <code className="font-mono font-bold">P = d·g·h</code>.</li>
+                    <li><strong>• Calorimetria:</strong> <code className="font-mono font-bold">Q = m·c·ΔT</code> (mudou temp) | <code className="font-mono font-bold">Q = m·L</code> (mudou estado).</li>
+                    <li><strong>• Propagação:</strong> Condução (sólidos), Convecção (fluidos), <strong>Irradiação</strong> (única no vácuo — espelho reflete, preto absorve).</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 4. GEOMETRIA ESPACIAL (MATEMÁTICA) */}
+          {(megaAreaFilter === 'all' || megaAreaFilter === 'geometria') && (
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+              <div className="flex items-center justify-between gap-2 pb-3 border-b border-slate-100">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-blue-50 text-blue-700 border border-blue-200">
+                    <Calculator className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-sm sm:text-base">
+                      📐 Matemática • Resumão Completo de Geometria Espacial
+                    </h3>
+                    <p className="text-xs text-slate-500">Volumes, Áreas, Cilindro, Cone, Esfera, Poliedros (Euler) e Conversões</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() =>
+                    handleCopyArea(
+                      'geometria',
+                      `📐 GEOMETRIA ESPACIAL — RESUMÃO ENEM\n• Regra de Ouro: Retos (Prisma, Cubo, Cilindro) -> V = Ab · h | Com Bico (Pirâmide, Cone) -> V = (Ab · h) / 3.\n• Paralelepípedo: V = a·b·c | At = 2(ab+ac+bc) | D = √(a²+b²+c²).\n• Cubo: V = a³ | At = 6a² | d_face = a√2 | D_cubo = a√3.\n• Cilindro: V = π·R²·h | Al = 2·π·R·h | At = 2πR² + 2πRh (Atenção: se der Diâmetro, R = D/2! Semicilindro divide por 2).\n• Cone: V = π·R²·h / 3 | Al = π·R·g | g² = R² + h². Tronco: V_grande - V_pequeno.\n• Esfera: V = (4/3)·π·R³ | A = 4·π·R².\n• Euler: V - A + F = 2 (2A = soma dos lados das faces ou graus dos vértices).\n• Conversões: 1 m³ = 1.000 L | 1 dm³ = 1 L | 1 cm³ = 1 mL | Escala: Área E², Volume E³.`
+                    )
+                  }
+                  className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1 shrink-0"
+                >
+                  {copiedArea === 'geometria' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedArea === 'geometria' ? 'Copiado!' : 'Copiar'}</span>
+                </button>
+              </div>
+
+              {/* Regra de Ouro */}
+              <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-950 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <strong>🔑 Regra de Ouro dos Volumes:</strong> Sólidos retos (Prisma, Cubo, Cilindro) = <code className="font-mono font-bold">V = Ab · h</code>
+                </div>
+                <div>
+                  Com bico (Pirâmide, Cone) = <code className="font-mono font-bold">V = (Ab · h) / 3</code>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                  <div className="font-bold text-slate-900">📦 Prismas, Cubo & Caixa</div>
+                  <p className="text-slate-700"><strong>Paralelepípedo:</strong> <code className="font-mono">V = a·b·c</code> | <code className="font-mono">At = 2(ab+ac+bc)</code> | <code className="font-mono">D = √(a²+b²+c²)</code></p>
+                  <p className="text-slate-700"><strong>Cubo:</strong> <code className="font-mono">V = a³</code> | <code className="font-mono">At = 6a²</code> | <code className="font-mono">d_face = a√2</code> | <code className="font-mono">D = a√3</code></p>
+                  <p className="text-slate-700"><strong>Prisma Hexagonal:</strong> Base = 6 triângulos equiláteros (<code className="font-mono">Ab = 6 · L²√3 / 4</code>).</p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                  <div className="font-bold text-slate-900">🥫 Cilindro (Campeão do ENEM)</div>
+                  <p className="text-slate-700"><strong>Volume:</strong> <code className="font-mono">V = π·R²·h</code> | <strong>Base:</strong> <code className="font-mono">π·R²</code></p>
+                  <p className="text-slate-700"><strong>Área Lateral:</strong> <code className="font-mono">Al = 2·π·R·h</code> | <strong>Total:</strong> <code className="font-mono">2πR² + 2πRh</code></p>
+                  <p className="text-slate-700"><strong>Equilátero:</strong> <code className="font-mono">h = 2R</code> | <strong>Semicilindro:</strong> divide por 2.</p>
+                  <p className="text-rose-700 font-semibold">⚠️ Deu Diâmetro (D)? Faça R = D/2 antes!</p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                  <div className="font-bold text-slate-900">🍦 Cone, Pirâmide & Tronco</div>
+                  <p className="text-slate-700"><strong>Cone:</strong> <code className="font-mono">V = π·R²·h / 3</code> | <code className="font-mono">Al = π·R·g</code> | <code className="font-mono">g² = R² + h²</code></p>
+                  <p className="text-slate-700"><strong>Pirâmide:</strong> <code className="font-mono">V = Ab·h / 3</code> | <code className="font-mono">ap_lat² = ap_base² + h²</code></p>
+                  <p className="text-slate-700"><strong>Tronco:</strong> <code className="font-mono">V_grande - V_pequeno</code>. Corte na metade (k=1/2): pontinha = 1/8, tronco = 7/8.</p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                  <div className="font-bold text-slate-900">⚽ Esfera</div>
+                  <p className="text-slate-700"><strong>Volume:</strong> <code className="font-mono font-bold">V = (4/3)·π·R³</code></p>
+                  <p className="text-slate-700"><strong>Área da Superfície:</strong> <code className="font-mono font-bold">A = 4·π·R²</code> (4 círculos)</p>
+                  <p className="text-slate-700"><strong>Cunha/Fuso:</strong> regra de 3 simples com 360°.</p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                  <div className="font-bold text-slate-900">💎 Poliedros (Euler)</div>
+                  <p className="text-slate-700"><strong>Fórmula:</strong> <code className="font-mono font-bold">V - A + F = 2</code> (<em>"Vamos Fazer Amor a 2"</em>)</p>
+                  <p className="text-slate-700"><strong>Arestas (A):</strong> <code className="font-mono">2A = 3·F₃ + 4·F₄ + 5·F₅...</code> ou soma dos graus dos vértices ÷ 2.</p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                  <div className="font-bold text-slate-900">💧 Conversões & Escala</div>
+                  <p className="text-slate-700"><strong>Litros:</strong> <code className="font-mono font-bold">1 m³ = 1.000 L</code> | <code className="font-mono font-bold">1 dm³ = 1 L</code> | <code className="font-mono font-bold">1 cm³ = 1 mL</code></p>
+                  <p className="text-slate-700"><strong>Escala:</strong> Comp. <code className="font-mono">E</code> | Área <code className="font-mono">E²</code> | Volume <code className="font-mono">E³</code></p>
+                  <p className="text-slate-700"><strong>Embalagem c/ folga f:</strong> Lado = <code className="font-mono">2R + 2f</code>.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 5. RESUMO RÁPIDO DE CHUTE EM NATUREZA */}
+          <div className="bg-amber-50/70 border border-amber-200 rounded-2xl p-4 sm:p-5 text-xs sm:text-sm space-y-2">
+            <div className="font-bold text-amber-950 flex items-center gap-1.5">
+              <Target className="w-4 h-4 text-amber-600" /> 🎯 4 Regras de Ouro na Hora da Prova (Natureza)
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-amber-950/90 text-xs">
+              <div><strong>1. Leia primeiro o comando final</strong> antes das alternativas — o textão inicial muitas vezes é só contextualização.</div>
+              <div><strong>2. Bússola Ambiental:</strong> elimine opções que defendam "erradicar predadores", "espécie exótica" ou "antibiótico contra vírus".</div>
+              <div><strong>3. Desconfie de extremos:</strong> palavras como <em>"SEMPRE"</em>, <em>"NUNCA"</em> e <em>"EXCLUSIVAMENTE"</em> quase sempre indicam distrator.</div>
+              <div><strong>4. Confira as unidades:</strong> antes de marcar, veja se o comando pediu <em>Watts ou kW</em>, <em>m ou cm</em>, <em>L ou mL</em>.</div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ==================== ABA 1: MAPEAMENTO COMPLETO DO ENEM 2025 ==================== */}
       {activeSubTab === 'mapeamento' && (
