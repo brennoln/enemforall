@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Subject } from '../types';
 import { bizusData } from '../data/bizus';
 import { studyTrailsData } from '../data/studyTrails';
+import { videoLessonsData } from '../data/videoLessons';
 import { TrailVisual } from './TrailVisual';
 import {
   Zap,
@@ -26,14 +27,17 @@ import {
   Map,
   BookOpen,
   Lightbulb,
-  Play
+  Play,
+  Video,
+  ExternalLink
 } from 'lucide-react';
 
 const TRAIL_STORAGE_KEY = 'enem_para_todos_trail_done_v1';
 
 export const BizusView: React.FC = () => {
-  const [mainMode, setMainMode] = useState<'trilha' | 'revisao'>('trilha');
+  const [mainMode, setMainMode] = useState<'trilha' | 'aulas' | 'revisao'>('trilha');
   const [trailSubject, setTrailSubject] = useState<Subject>('matematica');
+  const [aulasSubject, setAulasSubject] = useState<'all' | Subject>('matematica');
   const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>({});
   const [expandedStepId, setExpandedStepId] = useState<string | null>('trail-mat-1');
   const [miniQuizAnswers, setMiniQuizAnswers] = useState<Record<string, number>>({});
@@ -111,35 +115,47 @@ export const BizusView: React.FC = () => {
               </h2>
             </div>
             <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-              Escolha entre aprender a base passo a passo na <strong>Trilha de Estudos</strong> ou revisar rápido com o <strong>Raio-X 2025 e Bizus</strong>.
+              Escolha entre aprender passo a passo na <strong>Trilha de Estudos</strong>, assistir <strong>Aulas no YouTube</strong> por matéria ou revisar rápido em <strong>Revisão</strong>.
             </p>
           </div>
         </div>
 
-        {/* Seletor Principal: Trilha de Estudos vs Revisão */}
-        <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200/80">
+        {/* Seletor Principal: Trilha de Estudos vs Aulas vs Revisão */}
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200/80">
           <button
             onClick={() => setMainMode('trilha')}
-            className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all ${
+            className={`py-2.5 px-2 sm:px-3 rounded-xl font-bold text-[11px] sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 transition-all ${
               mainMode === 'trilha'
                 ? 'bg-slate-900 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <Map className="w-4 h-4 shrink-0" />
-            <span>Trilha de Estudos</span>
+            <span className="truncate">Trilha</span>
+          </button>
+
+          <button
+            onClick={() => setMainMode('aulas')}
+            className={`py-2.5 px-2 sm:px-3 rounded-xl font-bold text-[11px] sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 transition-all ${
+              mainMode === 'aulas'
+                ? 'bg-rose-600 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <Video className="w-4 h-4 shrink-0" />
+            <span className="truncate">Aulas</span>
           </button>
 
           <button
             onClick={() => setMainMode('revisao')}
-            className={`py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all ${
+            className={`py-2.5 px-2 sm:px-3 rounded-xl font-bold text-[11px] sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 transition-all ${
               mainMode === 'revisao'
                 ? 'bg-indigo-600 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <BookOpen className="w-4 h-4 shrink-0" />
-            <span>Revisão</span>
+            <span className="truncate">Revisão</span>
           </button>
         </div>
 
@@ -461,7 +477,155 @@ export const BizusView: React.FC = () => {
         </div>
       )}
 
-      {/* ==================== MODO 2: REVISÃO (MEGA REVISÃO, RAIO-X, CHUTE & BIZUS) ==================== */}
+      {/* ==================== MODO 2: AULAS NO YOUTUBE POR MATÉRIA ==================== */}
+      {mainMode === 'aulas' && (
+        <div className="space-y-4 animate-in fade-in duration-150">
+          {/* Aviso explicativo */}
+          <div className="bg-rose-50/80 border border-rose-200/80 rounded-2xl p-4 sm:p-5 flex items-start gap-3">
+            <div className="p-2 rounded-xl bg-rose-600 text-white shrink-0">
+              <Video className="w-4 h-4 sm:w-5 sm:h-5" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-bold text-rose-950 text-sm sm:text-base">
+                Onde assistir aulas gratuitas por assunto
+              </h3>
+              <p className="text-xs sm:text-sm text-rose-900/80 leading-relaxed">
+                Selecionamos professores referência do YouTube com playlists completas e gratuitas para cada matéria do ENEM. Toque em <strong>Assistir no YouTube</strong> para abrir direto no conteúdo.
+              </p>
+            </div>
+          </div>
+
+          {/* Filtro por Matéria */}
+          <div className="flex flex-wrap gap-1.5 bg-white border border-slate-200 p-2 rounded-2xl shadow-2xs">
+            {[
+              { id: 'matematica', label: '📐 Matemática', activeClass: 'bg-blue-600 text-white shadow-xs' },
+              { id: 'biologia', label: '🧬 Biologia', activeClass: 'bg-teal-600 text-white shadow-xs' },
+              { id: 'quimica', label: '⚗️ Química', activeClass: 'bg-emerald-600 text-white shadow-xs' },
+              { id: 'fisica', label: '⚡ Física', activeClass: 'bg-violet-600 text-white shadow-xs' },
+              { id: 'all', label: '📚 Todas', activeClass: 'bg-slate-900 text-white shadow-xs' },
+            ].map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setAulasSubject(item.id as 'all' | Subject)}
+                className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                  aulasSubject === item.id
+                    ? item.activeClass
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Lista de Cards de Aulas */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            {videoLessonsData
+              .filter((lesson) => aulasSubject === 'all' || lesson.subject === aulasSubject)
+              .map((lesson) => {
+                const subjectBadge =
+                  lesson.subject === 'matematica'
+                    ? 'bg-blue-50 text-blue-700 border-blue-200'
+                    : lesson.subject === 'biologia'
+                    ? 'bg-teal-50 text-teal-700 border-teal-200'
+                    : lesson.subject === 'quimica'
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                    : 'bg-violet-50 text-violet-700 border-violet-200';
+
+                const subjectLabel =
+                  lesson.subject === 'matematica'
+                    ? 'Matemática'
+                    : lesson.subject === 'biologia'
+                    ? 'Biologia'
+                    : lesson.subject === 'quimica'
+                    ? 'Química'
+                    : 'Física';
+
+                const levelColor =
+                  lesson.level === 'Base'
+                    ? 'bg-amber-50 text-amber-800 border-amber-200'
+                    : lesson.level === 'Essencial'
+                    ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                    : 'bg-slate-100 text-slate-700 border-slate-200';
+
+                return (
+                  <div
+                    key={lesson.id}
+                    className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-2xs flex flex-col justify-between gap-4 hover:border-slate-300 transition-colors"
+                  >
+                    <div className="space-y-2.5">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${subjectBadge}`}>
+                          {subjectLabel} • {lesson.topic}
+                        </span>
+                        <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${levelColor}`}>
+                          {lesson.level}
+                        </span>
+                      </div>
+
+                      <div>
+                        <h4 className="font-bold text-slate-900 text-sm sm:text-base leading-snug">
+                          {lesson.title}
+                        </h4>
+                        <p className="text-xs font-semibold text-rose-700 mt-1">
+                          {lesson.teacher} • {lesson.channelName}
+                        </p>
+                      </div>
+
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        {lesson.description}
+                      </p>
+                    </div>
+
+                    <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+                      <span className="text-[11px] font-medium text-slate-500 flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5" />
+                        {lesson.durationHint}
+                      </span>
+
+                      <div className="flex items-center gap-2 w-full sm:w-auto">
+                        <a
+                          href={lesson.channelUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex-1 sm:flex-initial text-center px-3 py-2 rounded-xl text-xs font-bold border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
+                        >
+                          Canal
+                        </a>
+                        <a
+                          href={lesson.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl text-xs font-bold bg-rose-600 text-white hover:bg-rose-700 transition-colors flex items-center justify-center gap-1.5 shadow-2xs"
+                        >
+                          <Play className="w-3.5 h-3.5 fill-current" />
+                          <span>{lesson.isDirectPlaylist ? 'Abrir Playlist' : 'Ver Aulas'}</span>
+                          <ExternalLink className="w-3 h-3 opacity-80" />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+
+          {/* Créditos e Agradecimento aos Professores */}
+          <div className="bg-slate-900 text-slate-100 rounded-2xl p-5 sm:p-6 border border-slate-800 shadow-xs space-y-2">
+            <div className="flex items-center gap-2 text-amber-300 font-bold text-xs sm:text-sm uppercase tracking-wider">
+              <Sparkles className="w-4 h-4 shrink-0" />
+              <span>Créditos e Gratidão</span>
+            </div>
+            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
+              Todo o mérito e os créditos das videoaulas pertencem integralmente aos <strong>professores e criadores de conteúdo</strong> (como Prof. Ferretto, Sandro Curió, Paulo Pereira, Samuel Cunha, Guilherme Goulart, Gabriel Cabral, Paulo Valim, Marcelo Boaro, Mestres do ENEM e tantos outros educadores) que dedicam seu tempo para disponibilizar aulas completas e gratuitas na internet.
+            </p>
+            <p className="text-xs sm:text-sm text-amber-200/95 font-medium leading-relaxed">
+              Nosso singelo obrigado por democratizarem a educação e transformarem o futuro de quem estuda por conta própria e corre atrás dos seus sonhos! Ao abrir um vídeo, deixe seu like e inscreva-se no canal do professor para apoiar o trabalho deles. ❤️
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ==================== MODO 3: REVISÃO (MEGA REVISÃO, RAIO-X, CHUTE & BIZUS) ==================== */}
       {mainMode === 'revisao' && (
         <>
       {/* ==================== ABA 0: MEGA REVISÃO POR ÁREA ==================== */}

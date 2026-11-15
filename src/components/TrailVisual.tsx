@@ -467,6 +467,257 @@ export const TrailVisual: React.FC<TrailVisualProps> = ({ stepId }) => {
         </svg>
       );
 
+    case 'trail-mat-6':
+      return (
+        <svg viewBox="0 0 360 125" className="w-full h-auto rounded-xl bg-blue-50/50 border border-blue-200/70">
+          <text x="180" y="19" textAnchor="middle" className="fill-blue-900 font-bold text-[11px]">
+            A Ordem dos Escolhidos Importa?
+          </text>
+          <rect x="20" y="32" width="152" height="78" rx="10" fill="#ffffff" stroke="#3b82f6" />
+          <text x="96" y="50" textAnchor="middle" className="fill-blue-700 font-black text-[10.5px]">🔑 SIM (Pódio / Senha)</text>
+          <text x="96" y="68" textAnchor="middle" className="fill-slate-700 text-[9.5px]">1º Ana, 2º Bia ≠ 1º Bia, 2º Ana</text>
+          <text x="96" y="86" textAnchor="middle" className="fill-blue-800 font-bold text-[9.5px]">Multiplique direto (PFC)</text>
+
+          <rect x="188" y="32" width="152" height="78" rx="10" fill="#ffffff" stroke="#6366f1" />
+          <text x="264" y="50" textAnchor="middle" className="fill-indigo-700 font-black text-[10.5px]">👥 NÃO (Comissão / Dupla)</text>
+          <text x="264" y="68" textAnchor="middle" className="fill-slate-700 text-[9.5px]">Grupo {'{Ana, Bia}'} = {'{Bia, Ana}'}</text>
+          <text x="264" y="86" textAnchor="middle" className="fill-indigo-800 font-bold text-[9.5px]">Combinação (divide repetidos)</text>
+        </svg>
+      );
+
+    case 'trail-mat-7':
+      return (
+        <svg viewBox="0 0 360 125" className="w-full h-auto rounded-xl bg-blue-50/50 border border-blue-200/70">
+          <text x="180" y="19" textAnchor="middle" className="fill-blue-900 font-bold text-[11px]">
+            Triângulo Retângulo (Pitágoras 3-4-5 & SOH CAH TOA)
+          </text>
+          <polygon points="45,102 45,38 145,102" fill="#dbeafe" stroke="#2563eb" strokeWidth="2" />
+          <rect x="45" y="92" width="10" height="10" fill="none" stroke="#2563eb" strokeWidth="1.5" />
+          <text x="32" y="72" textAnchor="middle" className="fill-slate-800 font-bold text-[11px]">3</text>
+          <text x="95" y="116" textAnchor="middle" className="fill-slate-800 font-bold text-[11px]">4</text>
+          <text x="105" y="64" textAnchor="middle" className="fill-blue-700 font-black text-[11px]">5 (Hip.)</text>
+
+          <rect x="175" y="34" width="165" height="76" rx="10" fill="#ffffff" stroke="#93c5fd" />
+          <text x="257" y="53" textAnchor="middle" className="fill-blue-800 font-bold text-[10px]">sen = Oposto / Hip</text>
+          <text x="257" y="71" textAnchor="middle" className="fill-blue-800 font-bold text-[10px]">cos = Adjacente / Hip</text>
+          <text x="257" y="89" textAnchor="middle" className="fill-blue-800 font-bold text-[10px]">tg = Oposto / Adjacente</text>
+        </svg>
+      );
+
+    case 'trail-mat-8':
+      return (
+        <svg viewBox="0 0 360 125" className="w-full h-auto rounded-xl bg-blue-50/50 border border-blue-200/70">
+          <text x="180" y="19" textAnchor="middle" className="fill-blue-900 font-bold text-[11px]">
+            Juros Simples (Reta) vs. Juros Compostos (Curva)
+          </text>
+          <rect x="20" y="32" width="152" height="78" rx="10" fill="#ffffff" stroke="#93c5fd" />
+          <text x="96" y="50" textAnchor="middle" className="fill-blue-700 font-black text-[10.5px]">📈 Juros Simples</text>
+          <text x="96" y="68" textAnchor="middle" className="fill-slate-700 text-[9.5px]">Sempre sobre o valor inicial</text>
+          <text x="96" y="86" textAnchor="middle" className="fill-slate-900 font-bold text-[10px]">J = C · i · t</text>
+
+          <rect x="188" y="32" width="152" height="78" rx="10" fill="#ffffff" stroke="#2563eb" />
+          <text x="264" y="50" textAnchor="middle" className="fill-blue-800 font-black text-[10.5px]">🚀 Juros Compostos</text>
+          <text x="264" y="68" textAnchor="middle" className="fill-slate-700 text-[9.5px]">Juros sobre juros todo mês</text>
+          <text x="264" y="86" textAnchor="middle" className="fill-slate-900 font-bold text-[10px]">M = C · (1 + i)ᵗ</text>
+        </svg>
+      );
+
+    case 'trail-bio-6':
+      return (
+        <svg viewBox="0 0 360 125" className="w-full h-auto rounded-xl bg-teal-50/50 border border-teal-200/70">
+          <text x="180" y="19" textAnchor="middle" className="fill-teal-900 font-bold text-[11px]">
+            Seleção Natural (Darwin) — Como Surgem Superbactérias
+          </text>
+          <rect x="20" y="34" width="98" height="72" rx="10" fill="#ffffff" stroke="#5eead4" />
+          <text x="69" y="52" textAnchor="middle" className="fill-teal-800 font-bold text-[10px]">1. População</text>
+          <text x="69" y="69" textAnchor="middle" className="fill-slate-700 text-[9px]">Maioria sensível</text>
+          <text x="69" y="83" textAnchor="middle" className="fill-rose-600 font-bold text-[9px]">+ algumas resistentes</text>
+
+          <text x="128" y="72" textAnchor="middle" className="fill-teal-700 font-black text-[14px]">➔</text>
+
+          <rect x="138" y="34" width="90" height="72" rx="10" fill="#ffffff" stroke="#5eead4" />
+          <text x="183" y="52" textAnchor="middle" className="fill-teal-800 font-bold text-[10px]">2. Antibiótico</text>
+          <text x="183" y="69" textAnchor="middle" className="fill-slate-700 text-[9px]">Mata as sensíveis</text>
+          <text x="183" y="83" textAnchor="middle" className="fill-rose-600 font-bold text-[9px]">Sobram resistentes</text>
+
+          <text x="238" y="72" textAnchor="middle" className="fill-teal-700 font-black text-[14px]">➔</text>
+
+          <rect x="248" y="34" width="92" height="72" rx="10" fill="#0d9488" />
+          <text x="294" y="52" textAnchor="middle" className="fill-teal-100 font-bold text-[10px]">3. Resultado</text>
+          <text x="294" y="70" textAnchor="middle" className="fill-white font-bold text-[9.5px]">Resistentes se</text>
+          <text x="294" y="83" textAnchor="middle" className="fill-white font-bold text-[9.5px]">multiplicam!</text>
+        </svg>
+      );
+
+    case 'trail-bio-7':
+      return (
+        <svg viewBox="0 0 360 125" className="w-full h-auto rounded-xl bg-teal-50/50 border border-teal-200/70">
+          <text x="180" y="19" textAnchor="middle" className="fill-teal-900 font-bold text-[11px]">
+            Digestão Química & Controle da Glicose
+          </text>
+          <rect x="20" y="32" width="100" height="76" rx="10" fill="#ffffff" stroke="#5eead4" />
+          <text x="70" y="50" textAnchor="middle" className="fill-teal-700 font-black text-[10px]">Boca (pH ~7)</text>
+          <text x="70" y="68" textAnchor="middle" className="fill-slate-700 text-[9px]">Amilase digere</text>
+          <text x="70" y="82" textAnchor="middle" className="fill-slate-900 font-bold text-[9px]">Amido (carboidrato)</text>
+
+          <rect x="130" y="32" width="100" height="76" rx="10" fill="#ffffff" stroke="#5eead4" />
+          <text x="180" y="50" textAnchor="middle" className="fill-teal-700 font-black text-[10px]">Estômago (pH ~2)</text>
+          <text x="180" y="68" textAnchor="middle" className="fill-slate-700 text-[9px]">Pepsina digere</text>
+          <text x="180" y="82" textAnchor="middle" className="fill-slate-900 font-bold text-[9px]">Proteínas</text>
+
+          <rect x="240" y="32" width="100" height="76" rx="10" fill="#ffffff" stroke="#0d9488" />
+          <text x="290" y="50" textAnchor="middle" className="fill-teal-800 font-black text-[10px]">Insulina x Glucagon</text>
+          <text x="290" y="68" textAnchor="middle" className="fill-emerald-700 font-bold text-[9px]">Insulina ↓ glicose</text>
+          <text x="290" y="82" textAnchor="middle" className="fill-rose-700 font-bold text-[9px]">Glucagon ↑ glicose</text>
+        </svg>
+      );
+
+    case 'trail-bio-8':
+      return (
+        <svg viewBox="0 0 360 125" className="w-full h-auto rounded-xl bg-teal-50/50 border border-teal-200/70">
+          <text x="180" y="19" textAnchor="middle" className="fill-teal-900 font-bold text-[11px]">
+            Vasos Condutores & Estômatos na Planta
+          </text>
+          <rect x="20" y="32" width="152" height="76" rx="10" fill="#ffffff" stroke="#0d9488" />
+          <text x="96" y="50" textAnchor="middle" className="fill-teal-700 font-black text-[10.5px]">⬆️ XILEMA (Seiva Bruta)</text>
+          <text x="96" y="68" textAnchor="middle" className="fill-slate-700 text-[9.5px]">Água + Sais minerais</text>
+          <text x="96" y="84" textAnchor="middle" className="fill-slate-800 font-bold text-[9.5px]">Da Raiz ➔ Folhas</text>
+
+          <rect x="188" y="32" width="152" height="76" rx="10" fill="#ffffff" stroke="#10b981" />
+          <text x="264" y="50" textAnchor="middle" className="fill-emerald-700 font-black text-[10.5px]">⬇️ FLOEMA (Elaborada)</text>
+          <text x="264" y="68" textAnchor="middle" className="fill-slate-700 text-[9.5px]">Açúcar da fotossíntese</text>
+          <text x="264" y="84" textAnchor="middle" className="fill-slate-800 font-bold text-[9.5px]">Das Folhas ➔ Planta toda</text>
+        </svg>
+      );
+
+    case 'trail-qui-6':
+      return (
+        <svg viewBox="0 0 360 125" className="w-full h-auto rounded-xl bg-emerald-50/50 border border-emerald-200/70">
+          <text x="180" y="19" textAnchor="middle" className="fill-emerald-900 font-bold text-[11px]">
+            Separação de Misturas (Qual método escolher?)
+          </text>
+          <rect x="20" y="32" width="152" height="76" rx="10" fill="#ffffff" stroke="#10b981" />
+          <text x="96" y="50" textAnchor="middle" className="fill-emerald-700 font-black text-[10px]">Heterogênea (2+ fases)</text>
+          <text x="96" y="68" textAnchor="middle" className="fill-slate-700 text-[9px]">Água + Areia ➔ Filtração</text>
+          <text x="96" y="84" textAnchor="middle" className="fill-slate-700 text-[9px]">Água + Óleo ➔ Decantação</text>
+
+          <rect x="188" y="32" width="152" height="76" rx="10" fill="#ffffff" stroke="#059669" />
+          <text x="264" y="50" textAnchor="middle" className="fill-emerald-800 font-black text-[10px]">Homogênea (1 fase)</text>
+          <text x="264" y="68" textAnchor="middle" className="fill-slate-700 text-[9px]">Água + Sal ➔ Destilação simples</text>
+          <text x="264" y="84" textAnchor="middle" className="fill-slate-700 text-[9px]">Petróleo ➔ Destil. fracionada</text>
+        </svg>
+      );
+
+    case 'trail-qui-7':
+      return (
+        <svg viewBox="0 0 360 125" className="w-full h-auto rounded-xl bg-emerald-50/50 border border-emerald-200/70">
+          <text x="180" y="19" textAnchor="middle" className="fill-emerald-900 font-bold text-[11px]">
+            4 Fatores que Aceleram uma Reação (Cinética)
+          </text>
+          <rect x="20" y="32" width="76" height="76" rx="10" fill="#ffffff" stroke="#6ee7b7" />
+          <text x="58" y="55" textAnchor="middle" className="fill-emerald-700 font-black text-[10px]">🔥 Temp.</text>
+          <text x="58" y="75" textAnchor="middle" className="fill-slate-700 text-[8.5px]">Mais calor =</text>
+          <text x="58" y="88" textAnchor="middle" className="fill-slate-800 font-bold text-[8.5px]">mais choques</text>
+
+          <rect x="102" y="32" width="76" height="76" rx="10" fill="#ffffff" stroke="#6ee7b7" />
+          <text x="140" y="55" textAnchor="middle" className="fill-emerald-700 font-black text-[10px]">🧂 Superf.</text>
+          <text x="140" y="75" textAnchor="middle" className="fill-slate-700 text-[8.5px]">Triturado reage</text>
+          <text x="140" y="88" textAnchor="middle" className="fill-slate-800 font-bold text-[8.5px]">mais rápido</text>
+
+          <rect x="184" y="32" width="76" height="76" rx="10" fill="#ffffff" stroke="#6ee7b7" />
+          <text x="222" y="55" textAnchor="middle" className="fill-emerald-700 font-black text-[10px]">🧪 Conc.</text>
+          <text x="222" y="75" textAnchor="middle" className="fill-slate-700 text-[8.5px]">Mais reagente</text>
+          <text x="222" y="88" textAnchor="middle" className="fill-slate-800 font-bold text-[8.5px]">= mais rápido</text>
+
+          <rect x="266" y="32" width="74" height="76" rx="10" fill="#059669" />
+          <text x="303" y="55" textAnchor="middle" className="fill-white font-black text-[10px]">⚡ Catalis.</text>
+          <text x="303" y="75" textAnchor="middle" className="fill-emerald-100 text-[8.5px]">Abaixa energia</text>
+          <text x="303" y="88" textAnchor="middle" className="fill-white font-bold text-[8.5px]">de ativação</text>
+        </svg>
+      );
+
+    case 'trail-qui-8':
+      return (
+        <svg viewBox="0 0 360 125" className="w-full h-auto rounded-xl bg-emerald-50/50 border border-emerald-200/70">
+          <text x="180" y="19" textAnchor="middle" className="fill-emerald-900 font-bold text-[11px]">
+            Poluição Atmosférica: Cada Problema e Seu Gás
+          </text>
+          <rect x="20" y="32" width="100" height="76" rx="10" fill="#ffffff" stroke="#6ee7b7" />
+          <text x="70" y="50" textAnchor="middle" className="fill-amber-700 font-black text-[10px]">🌡️ Efeito Estufa</text>
+          <text x="70" y="68" textAnchor="middle" className="fill-slate-800 font-bold text-[10px]">CO₂ e CH₄</text>
+          <text x="70" y="85" textAnchor="middle" className="fill-slate-600 text-[8.5px]">Retêm calor (IV)</text>
+
+          <rect x="130" y="32" width="100" height="76" rx="10" fill="#ffffff" stroke="#6ee7b7" />
+          <text x="180" y="50" textAnchor="middle" className="fill-rose-700 font-black text-[10px]">🌧️ Chuva Ácida</text>
+          <text x="180" y="68" textAnchor="middle" className="fill-slate-800 font-bold text-[10px]">SO₂ e NO₂</text>
+          <text x="180" y="85" textAnchor="middle" className="fill-slate-600 text-[8.5px]">Baixam pH da chuva</text>
+
+          <rect x="240" y="32" width="100" height="76" rx="10" fill="#ffffff" stroke="#6ee7b7" />
+          <text x="290" y="50" textAnchor="middle" className="fill-indigo-700 font-black text-[10px]">☀️ Ozônio (O₃)</text>
+          <text x="290" y="68" textAnchor="middle" className="fill-slate-800 font-bold text-[10px]">CFCs</text>
+          <text x="290" y="85" textAnchor="middle" className="fill-slate-600 text-[8.5px]">Destroem camada O₃</text>
+        </svg>
+      );
+
+    case 'trail-fis-6':
+      return (
+        <svg viewBox="0 0 360 125" className="w-full h-auto rounded-xl bg-amber-50/50 border border-amber-200/70">
+          <text x="180" y="19" textAnchor="middle" className="fill-amber-900 font-bold text-[11px]">
+            As 3 Leis de Newton na Prática
+          </text>
+          <rect x="20" y="32" width="100" height="76" rx="10" fill="#ffffff" stroke="#fcd34d" />
+          <text x="70" y="50" textAnchor="middle" className="fill-amber-700 font-black text-[10px]">1ª Inércia</text>
+          <text x="70" y="68" textAnchor="middle" className="fill-slate-700 text-[8.5px]">Cinto de segurança</text>
+          <text x="70" y="83" textAnchor="middle" className="fill-slate-800 font-bold text-[8.5px]">Freou ➔ vai p/ frente</text>
+
+          <rect x="130" y="32" width="100" height="76" rx="10" fill="#ffffff" stroke="#fcd34d" />
+          <text x="180" y="50" textAnchor="middle" className="fill-amber-700 font-black text-[10px]">2ª Dinâmica</text>
+          <text x="180" y="68" textAnchor="middle" className="fill-slate-900 font-black text-[11px]">F = m · a</text>
+          <text x="180" y="83" textAnchor="middle" className="fill-slate-600 text-[8.5px]">Mais massa = + difícil</text>
+
+          <rect x="240" y="32" width="100" height="76" rx="10" fill="#ffffff" stroke="#fcd34d" />
+          <text x="290" y="50" textAnchor="middle" className="fill-amber-700 font-black text-[10px]">3ª Ação/Reação</text>
+          <text x="290" y="68" textAnchor="middle" className="fill-slate-700 text-[8.5px]">Mesmo valor, sentidos</text>
+          <text x="290" y="83" textAnchor="middle" className="fill-slate-800 font-bold text-[8.5px]">opostos (2 corpos!)</text>
+        </svg>
+      );
+
+    case 'trail-fis-7':
+      return (
+        <svg viewBox="0 0 360 125" className="w-full h-auto rounded-xl bg-amber-50/50 border border-amber-200/70">
+          <text x="180" y="19" textAnchor="middle" className="fill-amber-900 font-bold text-[11px]">
+            Óptica da Visão: Miopia vs. Hipermetropia
+          </text>
+          <rect x="20" y="32" width="152" height="76" rx="10" fill="#ffffff" stroke="#f59e0b" />
+          <text x="96" y="50" textAnchor="middle" className="fill-amber-700 font-black text-[10.5px]">👓 MIOPIA (Longe embaçado)</text>
+          <text x="96" y="68" textAnchor="middle" className="fill-slate-700 text-[9px]">Imagem ANTES da retina</text>
+          <text x="96" y="84" textAnchor="middle" className="fill-slate-900 font-bold text-[9.5px]">Corrige: Lente Divergente</text>
+
+          <rect x="188" y="32" width="152" height="76" rx="10" fill="#ffffff" stroke="#d97706" />
+          <text x="264" y="50" textAnchor="middle" className="fill-amber-800 font-black text-[10.5px]">🔍 HIPERMETROPIA (Perto)</text>
+          <text x="264" y="68" textAnchor="middle" className="fill-slate-700 text-[9px]">Imagem DEPOIS da retina</text>
+          <text x="264" y="84" textAnchor="middle" className="fill-slate-900 font-bold text-[9.5px]">Corrige: Lente Convergente</text>
+        </svg>
+      );
+
+    case 'trail-fis-8':
+      return (
+        <svg viewBox="0 0 360 125" className="w-full h-auto rounded-xl bg-amber-50/50 border border-amber-200/70">
+          <text x="180" y="19" textAnchor="middle" className="fill-amber-900 font-bold text-[11px]">
+            Hidrostática: Empuxo (Flutuar) & Pressão na Água
+          </text>
+          <rect x="20" y="32" width="152" height="76" rx="10" fill="#ffffff" stroke="#0284c7" />
+          <text x="96" y="50" textAnchor="middle" className="fill-sky-700 font-black text-[10.5px]">🚢 Densidade & Empuxo</text>
+          <text x="96" y="68" textAnchor="middle" className="fill-slate-700 text-[9px]">d(objeto) &lt; d(água) ➔ Flutua</text>
+          <text x="96" y="84" textAnchor="middle" className="fill-slate-700 text-[9px]">d(objeto) &gt; d(água) ➔ Afunda</text>
+
+          <rect x="188" y="32" width="152" height="76" rx="10" fill="#ffffff" stroke="#f59e0b" />
+          <text x="264" y="50" textAnchor="middle" className="fill-amber-700 font-black text-[10.5px]">🌊 Pressão Hidrostática</text>
+          <text x="264" y="68" textAnchor="middle" className="fill-slate-900 font-bold text-[10px]">P = d · g · h</text>
+          <text x="264" y="84" textAnchor="middle" className="fill-slate-700 text-[9px]">+ fundo = + pressão!</text>
+        </svg>
+      );
+
     default:
       return null;
   }

@@ -110,6 +110,54 @@ export const studyTrailsData: SubjectTrail[] = [
           correctIndex: 0,
           feedback: 'Correto! São 2 casos favoráveis (5 e 6) num total de 6 lados: 2/6 = 1/3.'
         }
+      },
+      {
+        id: 'trail-mat-6',
+        stepNumber: 6,
+        title: 'Análise Combinatória Sem Trauma',
+        subtitle: 'Princípio Multiplicativo, Permutação e Combinação',
+        summary:
+          'Antes de decorar fórmula, faça tracinhos para cada escolha e multiplique as opções (Princípio Fundamental da Contagem). Se a ordem dos escolhidos NÃO muda o grupo (ex: formar uma comissão ou escolher 3 sabores de sorvete), use Combinação; se a ordem importa (ex: pódio 1º, 2º, 3º ou senha), multiplique direto.',
+        keyIdea: 'Pergunte sempre: "Se eu trocar a ordem das pessoas escolhidas, muda o resultado?" NÃO muda = Combinação (divide pelos repetidos). MUDA = só multiplicar!',
+        enemExample: 'Senhas de cadeado/banco, placas de carro e formação de equipes.',
+        miniQuiz: {
+          prompt: 'Para criar uma senha de 2 dígitos usando apenas os algarismos 1, 2 e 3 (podendo repetir), quantas senhas existem?',
+          options: ['6 senhas', '9 senhas', '5 senhas'],
+          correctIndex: 1,
+          feedback: 'Isso! 3 opções para o 1º dígito × 3 opções para o 2º dígito = 3 × 3 = 9 senhas.'
+        }
+      },
+      {
+        id: 'trail-mat-7',
+        stepNumber: 7,
+        title: 'Triângulo Retângulo: Pitágoras & Trigonometria',
+        subtitle: 'SOH CAH TOA e ângulos de 30°, 45° e 60°',
+        summary:
+          'Em todo triângulo retângulo (com canto de 90°), o maior lado é a Hipotenusa (sempre de frente para o 90°). O Teorema de Pitágoras diz: Hipotenusa² = Cateto² + Cateto². Quando aparece ângulo (30°, 45°, 60°), usamos Seno = Oposto/Hipotenusa, Cosseno = Adjacente/Hipotenusa e Tangente = Oposto/Adjacente.',
+        keyIdea: 'Memorize o triângulo clássico 3, 4 e 5 (e seus múltiplos 6, 8, 10). Ele resolve metade das questões de Pitágoras de cabeça!',
+        enemExample: 'Altura de prédio/rampa com ângulo de visão, escada encostada na parede e distância em mapas.',
+        miniQuiz: {
+          prompt: 'Uma escada forma um triângulo retângulo com catetos 3 m e 4 m. Qual o comprimento da escada (hipotenusa)?',
+          options: ['5 m', '7 m', '12 m'],
+          correctIndex: 0,
+          feedback: 'Perfeito! Triângulo pitagórico clássico 3-4-5: √(3² + 4²) = √(9 + 16) = √25 = 5 m.'
+        }
+      },
+      {
+        id: 'trail-mat-8',
+        stepNumber: 8,
+        title: 'Matemática Financeira: Juros Simples vs Compostos',
+        subtitle: 'Entender parcelas, financiamentos e crescimento exponencial',
+        summary:
+          'Nos Juros Simples, o valor do juro é sempre o mesmo todo mês (cresce em linha reta: J = C·i·t). Nos Juros Compostos (o dos bancos e cartões), o juro incide sobre o total acumulado do mês anterior — "juros sobre juros" (M = C·(1 + i)^t).',
+        keyIdea: 'Para comparar planos de pagamento à vista vs parcelado no ENEM, some todas as parcelas e veja quanto a mais foi cobrado sobre o preço à vista.',
+        enemExample: 'Escolha entre opções de empréstimo/financiamento e rendimento de poupança/investimento.',
+        miniQuiz: {
+          prompt: 'Você aplicou R$ 1.000 a juros compostos de 10% ao mês. Quanto terá ao final do 2º mês?',
+          options: ['R$ 1.200', 'R$ 1.210', 'R$ 1.110'],
+          correctIndex: 1,
+          feedback: 'Na mosca! 1º mês: 1.000 + 10% = 1.100. 2º mês: 1.100 + 10% (110) = R$ 1.210.'
+        }
       }
     ]
   },
@@ -196,6 +244,58 @@ export const studyTrailsData: SubjectTrail[] = [
           options: ['Clone', 'Transgênica', 'Híbrida natural'],
           correctIndex: 1,
           feedback: 'Perfeito! Receber gene de outra espécie diferente define um organismo transgênico.'
+        }
+      },
+      {
+        id: 'trail-bio-6',
+        stepNumber: 6,
+        title: 'Evolução: Seleção Natural & Resistência Bacteriana',
+        subtitle: 'Darwin vs Lamarck — a pegadinha clássica de todo ENEM',
+        summary:
+          'Para Lamarck, o ser vivo mudava "por necessidade" e passava isso aos filhos (uso e desuso). Para Darwin, a variação JÁ EXISTIA na população e o ambiente apenas seleciona quem sobrevive melhor (Seleção Natural). Um antibiótico NÃO cria superbactérias: ele mata as sensíveis e seleciona as que já eram resistentes!',
+        keyIdea: 'Sempre desconfie de frases com "para sobreviver, o animal criou..." (isso é Lamarck, errado!). O certo é: "indivíduos que já tinham a característica sobreviveram mais".',
+        enemExample: 'Uso incorreto de antibióticos, resistência de insetos a venenos e bicos de tentilhões.',
+        miniQuiz: {
+          prompt: 'Por que o uso exagerado de antibióticos gera bactérias resistentes?',
+          options: [
+            'O remédio ensina a bactéria a ficar forte',
+            'O remédio mata as fracas e sobram/multiplicam-se as que já tinham resistência',
+            'A bactéria muda de DNA por vontade própria'
+          ],
+          correctIndex: 1,
+          feedback: 'Exato! Isso é Seleção Natural pura: o antibiótico seleciona as bactérias que já possuíam mutação resistente.'
+        }
+      },
+      {
+        id: 'trail-bio-7',
+        stepNumber: 7,
+        title: 'Fisiologia Humana: Digestão, Circulação & Hormônios',
+        subtitle: 'Como o corpo processa comida, sangue e glicose',
+        summary:
+          'Na digestão, a amilase da boca quebra amido, o estômago ácido (pepsina) digere proteínas e o intestino delgado absorve nutrientes com ajuda da bile (emulsifica gorduras, sem enzimas). Na circulação, artérias saem do coração e veias chegam. Insulina baixa a glicose do sangue; Glucagon sobe.',
+        keyIdea: 'A bile é produzida no FÍGADO (armazenada na vesícula) e funciona como um detergente natural para quebrar gotas grandes de gordura em gotinhas.',
+        enemExample: 'Diabetes (insulina x glucagon), pH do estômago/intestino e circulação pulmonar.',
+        miniQuiz: {
+          prompt: 'Qual hormônio é liberado após uma refeição rica em açúcar para colocar a glicose dentro das células?',
+          options: ['Adrenalina', 'Insulina', 'Glucagon'],
+          correctIndex: 1,
+          feedback: 'Isso! A insulina age como a "chave" que abre a célula para a glicose entrar, baixando o açúcar no sangue.'
+        }
+      },
+      {
+        id: 'trail-bio-8',
+        stepNumber: 8,
+        title: 'Botânica Prática: Plantas, Xilema, Floema & Estômatos',
+        subtitle: 'Como as plantas bebem água e sobrevivem à seca',
+        summary:
+          'A seiva bruta (água + sais minerais) sobe da raiz até as folhas pelo XILEMA. A seiva elaborada (açúcar da fotossíntese) vai das folhas para o resto da planta pelo FLOEMA. Nas folhas, pequenos poros chamados estômatos abrem e fecham para trocar gases (CO₂/O₂) e evitar perder água em dias muito secos.',
+        keyIdea: 'Macete: Xilema = Xupa água da raiz pra cima. Floema = Fica com a glicose da folha pra baixo. Se faltar água, a planta FECHA os estômatos.',
+        enemExample: 'Adaptações do cerrado/caatinga (folhas em espinho no cacto) e anel de Malpighi.',
+        miniQuiz: {
+          prompt: 'Em um dia muito quente e seco, para economizar água, o que a planta faz com seus estômatos?',
+          options: ['Fecha os estômatos', 'Abre ainda mais os estômatos', 'Transforma xilema em raiz'],
+          correctIndex: 0,
+          feedback: 'Mandou bem! Fechando os estômatos ela reduz drasticamente a perda de água por transpiração.'
         }
       }
     ]
@@ -284,6 +384,58 @@ export const studyTrailsData: SubjectTrail[] = [
           correctIndex: 0,
           feedback: 'CRAO na veia: Cátodo Reduz (consoante com consoante) e Ânodo Oxida!'
         }
+      },
+      {
+        id: 'trail-qui-6',
+        stepNumber: 6,
+        title: 'Separação de Misturas & Tratamento de Água',
+        subtitle: 'Decantação, filtração, destilação e estação de tratamento',
+        summary:
+          'Misturas heterogêneas (fases visíveis, como água + areia ou água + óleo) se separam por filtração ou decantação. Misturas homogêneas (água + sal ou água + álcool) exigem destilação (diferença no ponto de ebulição). Na estação de tratamento de água (ETA), usa-se floculação, decantação, filtração e cloração.',
+        keyIdea: 'Na destilação fracionada do petróleo, os compostos mais leves (como gás de cozinha e gasolina) saem no TOPO da torre; os pesados (asfalto/óleo diesel) ficam embaixo.',
+        enemExample: 'Tratamento de água (ETA), refino do petróleo e extração de óleos essenciais.',
+        miniQuiz: {
+          prompt: 'Para separar uma mistura homogênea de água e sal recuperando a água pura, qual método usar?',
+          options: ['Filtração com papel', 'Destilação simples', 'Peneiração'],
+          correctIndex: 1,
+          feedback: 'Exato! Como o sal está dissolvido, o filtro não segura. Na destilação a água ferve, evapora e condensa pura!'
+        }
+      },
+      {
+        id: 'trail-qui-7',
+        stepNumber: 7,
+        title: 'Cinética Química & Equilíbrio (Le Chatelier)',
+        subtitle: 'O que faz uma reação ir mais rápido e como ela se ajusta',
+        summary:
+          'Uma reação fica mais rápida quando aumentamos: Temperatura, Concentração dos reagentes, Superfície de contato (comprimido triturado dissolve mais rápido!) ou usamos um Catalisador (diminui a energia de ativação sem ser consumido). No Equilíbrio Químico, se adicionarmos mais reagente, a reação "foge" produzindo mais produto.',
+        keyIdea: 'Catalisador NUNCA aumenta a quantidade final de produto nem muda o ΔH — ele apenas faz a reação chegar ao equilíbrio mais rápido!',
+        enemExample: 'Comprimido efervescente inteiro vs triturado, conservação de alimentos na geladeira e enzimas.',
+        miniQuiz: {
+          prompt: 'Por que guardamos carne na geladeira para ela não estragar rápido?',
+          options: [
+            'O frio aumenta o catalisador da carne',
+            'Diminuir a temperatura reduz a velocidade das reações químicas de decomposição',
+            'O frio transforma proteínas em sais'
+          ],
+          correctIndex: 1,
+          feedback: 'Perfeito! Menor temperatura = moléculas se movem mais devagar = menos choques eficazes = reação mais lenta.'
+        }
+      },
+      {
+        id: 'trail-qui-8',
+        stepNumber: 8,
+        title: 'Polímeros, Chuva Ácida & Química Ambiental',
+        subtitle: 'Plásticos, biodegradáveis e gases poluentes no ENEM',
+        summary:
+          'Polímeros são macromoléculas gigantes formadas pela união de vários pedacinhos iguais (monômeros), como o plástico (polietileno), o amido e as proteínas. Na atmosfera, gases com enxofre (SO₂) e nitrogênio (NO₂) de queimadas/fábricas reagem com a água da chuva formando Chuva Ácida, que corrói monumentos e acidifica solos.',
+        keyIdea: 'Efeito estufa (CO₂, CH₄) retém calor (radiação infravermelha). Chuva ácida (SO₂, NOₓ) baixa o pH da água. Camada de ozônio (O₃) é destruída por CFCs.',
+        enemExample: 'Reciclagem de polímeros, biodigestores (metano) e neutralização de solo ácido com calcário.',
+        miniQuiz: {
+          prompt: 'Qual gás liberado pela pecuária e por aterros sanitários tem altíssimo poder de agravar o Efeito Estufa?',
+          options: ['Gás Metano (CH₄)', 'Gás Oxigênio (O₂)', 'Gás Hélio (He)'],
+          correctIndex: 0,
+          feedback: 'Isso! O metano (CH₄) é um potente gás estufa, mas pode ser capturado em biodigestores para gerar energia limpa.'
+        }
       }
     ]
   },
@@ -370,6 +522,58 @@ export const studyTrailsData: SubjectTrail[] = [
           options: ['Série', 'Paralelo'],
           correctIndex: 1,
           feedback: 'Perfeito! Em paralelo cada aparelho tem caminho próprio e recebe a mesma voltagem.'
+        }
+      },
+      {
+        id: 'trail-fis-6',
+        stepNumber: 6,
+        title: 'Leis de Newton, Força & Atrito no Cotidiano',
+        subtitle: 'Inércia (cinto de segurança), F = m·a e Ação e Reação',
+        summary:
+          '1ª Lei (Inércia): todo corpo tende a continuar parado ou em movimento reto se ninguém empurrar (por isso você vai pra frente quando o ônibus freia). 2ª Lei: Força Resultante = massa × aceleração (F = m·a). 3ª Lei (Ação e Reação): toda força tem par igual em sentido oposto, aplicado em corpos DIFERENTES.',
+        keyIdea: 'Ação e reação NUNCA se anulam porque atuam em corpos diferentes (você empurra a água para trás; a água empurra você para frente!).',
+        enemExample: 'Cinto de segurança e encosto de cabeça, frenagem na pista molhada (atrito) e foguetes.',
+        miniQuiz: {
+          prompt: 'Quando um ônibus freia bruscamente, os passageiros são jogados para frente por causa da:',
+          options: ['Força centrífuga', 'Inércia (1ª Lei de Newton)', 'Ação e reação'],
+          correctIndex: 1,
+          feedback: 'Correto! Seu corpo estava em movimento junto com o ônibus e, por inércia, tende a continuar em movimento.'
+        }
+      },
+      {
+        id: 'trail-fis-7',
+        stepNumber: 7,
+        title: 'Óptica: Espelhos, Lentes & Defeitos da Visão',
+        subtitle: 'Miopia, Hipermetropia, Refração e Cores dos Objetos',
+        summary:
+          'Quando a luz muda de meio (do ar para a água/vidro), ela muda de velocidade e pode desviar (Refração). Na visão, o Míope enxerga mal de longe porque a imagem forma ANTES da retina (corrige com lente Divergente). O Hipermétrope enxerga mal de perto (imagem DEPOIS da retina, corrige com lente Convergente).',
+        keyIdea: 'Uma folha verde parece verde porque reflete o verde e absorve todas as outras cores. Roupa preta absorve todas as cores (esquenta mais no sol!).',
+        enemExample: 'Óculos para miopia/hipermetropia, arco-íris (dispersão da luz) e espelho retrovisor convexo.',
+        miniQuiz: {
+          prompt: 'Qual lente corrige a Miopia (dificuldade de enxergar de longe)?',
+          options: ['Lente Divergente (borda grossa)', 'Lente Convergente (lupa)', 'Espelho plano'],
+          correctIndex: 0,
+          feedback: 'Isso! Na miopia os raios fecham antes da retina, então a lente divergente abre um pouco os raios para focar exatamente na retina.'
+        }
+      },
+      {
+        id: 'trail-fis-8',
+        stepNumber: 8,
+        title: 'Hidrostática: Pressão, Empuxo & Por que Navios Flutuam',
+        subtitle: 'Densidade, Princípio de Arquimedes e Pressão na Água',
+        summary:
+          'Pressão = Força / Área (por isso faca afiada corta melhor: mesma força em área menor = maior pressão). Dentro de um líquido, a pressão aumenta com a profundidade (P = d·g·h). Todo corpo mergulhado recebe uma força para cima chamada Empuxo, igual ao peso do líquido que ele deslocou.',
+        keyIdea: 'Se a densidade do objeto for MENOR que a da água (1 g/cm³), ele flutua! Um navio de aço flutua porque é oco por dentro (cheio de ar), baixando sua densidade média.',
+        enemExample: 'Submarino, barragem mais larga na base (pressão maior no fundo) e gelo flutuando.',
+        miniQuiz: {
+          prompt: 'Por que a parede de uma represa/barragem é construída muito mais grossa na base do que no topo?',
+          options: [
+            'Porque a água no fundo é mais fria',
+            'Porque a pressão da água aumenta com a profundidade',
+            'Para economizar cimento em cima'
+          ],
+          correctIndex: 1,
+          feedback: 'Perfeito! P = d·g·h: quanto maior a profundidade (h), maior a pressão exercida pela água contra a parede.'
         }
       }
     ]
