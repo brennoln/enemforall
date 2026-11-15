@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { QuizView } from './components/QuizView';
 import { BizusView } from './components/BizusView';
 import { MemoryCheatSheetView } from './components/MemoryCheatSheetView';
@@ -12,11 +12,48 @@ import {
   Target,
   BarChart3,
   Zap,
-  Coffee
+  Coffee,
+  Download,
+  WifiOff
 } from 'lucide-react';
 
 export function App() {
   const [currentTab, setCurrentTab] = useState<'quiz' | 'formulas' | 'bizus' | 'strategy'>('quiz');
+  const [installPrompt, setInstallPrompt] = useState<any>(null);
+  const [isOnline, setIsOnline] = useState<boolean>(
+    typeof navigator !== 'undefined' ? navigator.onLine : true
+  );
+
+  useEffect(() => {
+    const handleBeforeInstall = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+    };
+    const handleInstalled = () => setInstallPrompt(null);
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+    window.addEventListener('appinstalled', handleInstalled);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+      window.removeEventListener('appinstalled', handleInstalled);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!installPrompt) return;
+    installPrompt.prompt();
+    const { outcome } = await installPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setInstallPrompt(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans selection:bg-slate-900 selection:text-white pb-20 md:pb-6">
@@ -89,17 +126,40 @@ export function App() {
 
       {/* Conteúdo Principal */}
       <main className="flex-1 max-w-4xl w-full mx-auto px-3 sm:px-4 py-3 md:py-5">
-        {/* Faixa de Boas-Vindas para Quem Tem Pouco Tempo */}
-        <div className="mb-3 p-2.5 sm:px-3.5 bg-white border border-slate-200 rounded-xl flex items-center justify-between gap-2 text-xs shadow-2xs">
+        {/* Faixa de Boas-Vindas para Quem Tem Pouco Tempo + Botão Instalar PWA / Status Offline */}
+        <div className="mb-3 p-2.5 sm:px-3.5 bg-white border border-slate-200 rounded-xl flex flex-wrap items-center justify-between gap-2 text-xs shadow-2xs">
           <div className="flex items-center gap-2 text-slate-700 min-w-0">
-            <Coffee className="w-4 h-4 text-indigo-600 shrink-0" />
-            <span className="truncate text-[11px] sm:text-xs">
-              <strong>Modo Intervalo:</strong> faça 1 ou 2 questões por pausa — seu progresso fica salvo aqui!
+            {!isOnline ? (
+              <>
+                <WifiOff className="w-4 h-4 text-amber-600 shrink-0" />
+                <span className="truncate text-[11px] sm:text-xs font-medium text-amber-900">
+                  <strong>Modo Offline Ativo:</strong> todas as 245 questões e fórmulas seguem funcionando!
+                </span>
+              </>
+            ) : (
+              <>
+                <Coffee className="w-4 h-4 text-indigo-600 shrink-0" />
+                <span className="truncate text-[11px] sm:text-xs">
+                  <strong>Modo Intervalo:</strong> faça 1 ou 2 questões por pausa — funciona até offline!
+                </span>
+              </>
+            )}
+          </div>
+
+          <div className="flex items-center gap-1.5 shrink-0">
+            {installPrompt && (
+              <button
+                onClick={handleInstallClick}
+                className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] sm:text-[11px] font-bold flex items-center gap-1 shadow-2xs transition-colors"
+              >
+                <Download className="w-3 h-3" />
+                <span>Instalar App Offline</span>
+              </button>
+            )}
+            <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+              Sem Cadastro • Open Source
             </span>
           </div>
-          <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 shrink-0">
-            Sem Cadastro • Open Source
-          </span>
         </div>
 
         {/* Abas */}
