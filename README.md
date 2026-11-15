@@ -44,8 +44,16 @@ O **ENEM Para Todos** entrega acesso livre e imediato: abriu, resolveu 1 ou 2 qu
   - **Biologia:** Ciclos biogeoquímicos, imunologia, fisiologia humana, genética mendeliana e citologia.
 - Botão de **Copiar Fórmula** em 1 clique e expansor de **Aprofundamento Teórico**.
 
-### 4. ⚡ Sínteses Rápidas & Bizus Teóricos
-- Cartões com os mnemônicos clássicos que salvam na hora da prova (*"Quem Vê, Ri"*, *"Piu/Prii/Puri"*, *"Tem biquinho divide por 3"*, *"CRAO"*, *"Que MaCeTe"* e *"Vacina Previne, Soro Salva"*).
+### 4. 📚 Central de Estudos (`Trilha de Estudos`, `Aulas` e `Revisão`)
+- **Trilha de Estudos (32 etapas guiadas):**
+  - 8 etapas progressivas por disciplina (**Matemática, Biologia, Química e Física**), partindo do básico até os tópicos mais cobrados no ENEM;
+  - Cada etapa traz explicação em linguagem simples, **diagramas visuais em SVG** para facilitar a compreensão, exemplo real de cobrança no ENEM e **mini-quiz imediato** para fixar na hora, com progresso salvo no aparelho (`LocalStorage`).
+- **Aulas (Curadoria Gratuita no YouTube):**
+  - 25 recomendações de playlists e aulas gratuitas separadas por matéria e assunto, direcionando o estudante para professores referência da internet (**Prof. Ferretto, Sandro Curió, Paulo Pereira, Samuel Cunha, Guilherme Goulart, Gabriel Cabral, Paulo Valim, Marcelo Boaro, Mestres do ENEM** e outros);
+  - Seção dedicada de **Créditos e Gratidão**, reconhecendo integralmente o trabalho dos educadores que democratizam o ensino gratuito online.
+- **Revisão Rápida (Mega Revisão, Raio-X & Bizus):**
+  - Cartões com os mnemônicos clássicos que salvam na hora da prova (*"Quem Vê, Ri"*, *"Piu/Prii/Puri"*, *"Tem biquinho divide por 3"*, *"CRAO"*, *"Que MaCeTe"* e *"Vacina Previne, Soro Salva"*).
+- **Chute & TRI:** Estratégias práticas para gerenciar tempo, identificar questões fáceis/médias e proteger sua nota na Teoria de Resposta ao Item.
 
 ### 5. 📱 Design Mobile-First & Acadêmico
 - Interface sóbria, elegante e sem distrações visuais (tema claro acadêmico);
@@ -75,8 +83,8 @@ O **ENEM Para Todos** entrega acesso livre e imediato: abriu, resolveu 1 ou 2 qu
 
 1. **Clone o repositório:**
    ```bash
-   git clone https://github.com/seu-usuario/appenem.git
-   cd appenem
+   git clone https://github.com/brennoln/enemforall.git
+   cd enemforall
    ```
 
 2. **Instale as dependências:**
@@ -120,7 +128,8 @@ src/
 ├── components/             # Componentes modulares da interface
 │   ├── QuizView.tsx        # Módulo interativo do simulado e streak
 │   ├── MemoryCheatSheetView.tsx # Guia de fórmulas e aprofundamento
-│   └── BizusView.tsx       # Sínteses conceituais e mnemônicos
+│   ├── BizusView.tsx       # Central de Estudos (Trilha, Aulas e Revisão)
+│   └── TrailVisual.tsx     # Diagramas SVG didáticos para cada etapa da trilha
 ├── data/                   # Banco de dados estático em TypeScript
 │   ├── questions/          # Módulos de questões separadas por disciplina
 │   │   ├── math1.ts, math2.ts, math3.ts
@@ -128,6 +137,8 @@ src/
 │   │   ├── chemistry.ts
 │   │   └── biology.ts
 │   ├── cheatSheet/         # Fórmulas e decorebas por disciplina
+│   ├── studyTrails.ts      # 32 etapas guiadas (8 por matéria) com mini-quizzes
+│   ├── videoLessons.ts     # Curadoria de playlists e aulas gratuitas no YouTube
 │   ├── bizus.ts            # Mnemônicos e resumos
 │   └── questions.ts        # Consolidação do banco de questões
 ├── utils/
